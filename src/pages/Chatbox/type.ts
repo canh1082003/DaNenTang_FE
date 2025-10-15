@@ -15,6 +15,7 @@ export interface Message {
   updatedAt?: string | Date;
   readBy?: string[];
   read?: boolean;
+  fileName?: string;
 }
 
 export interface Conversation {
@@ -34,4 +35,5 @@ export interface Conversation {
   online?: boolean;
   messages?: Message[];
   onlineParticipants?: string[];
+  assignedDepartment?: string;
 }

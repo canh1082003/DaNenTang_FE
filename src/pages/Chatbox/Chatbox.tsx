@@ -1,13 +1,13 @@
 
 import type React from "react"
-import { useEffect, useState } from "react"
-import { Search, Phone, Video, MoreVertical, Send, Paperclip, Smile, ArrowLeft, CloudFog } from "lucide-react"
+import { useEffect, useMemo, useState } from "react"
+import { Search, Phone, Video, MoreVertical, Send, Paperclip, Smile, ArrowLeft, CloudFog, Briefcase } from "lucide-react"
 import "../Chatbox/Chatbox.css"
 import { Conversation } from "./type"
 import { ALL_CONVERSATIONS } from "../../hooks/auth/chat/constants"
 import api from "../../API/API"
 import socket from "../../Utils/socket"
-import { formatDate } from "../../Utils/formatDate"
+import { formatDate, timeAgo, useTimeAgo } from "../../Utils/formatDate"
 import ConversationDetail from "../Conversation_Details/ConversationDetail"
 import { useNavigate } from "react-router-dom"
 
@@ -17,7 +17,7 @@ export default function ChatBox() {
     const [searchQuery, setSearchQuery] = useState("")
     const [conversationsAll, setConversationsAll] = useState<Conversation[]>([])
     const [onlineUsers, setOnlineUsers] = useState<Set<string>>(new Set())
-    console.log(onlineUsers)
+    const [debouncedQuery, setDebouncedQuery] = useState(searchQuery);
     const [currentConversation, setCurrentConversation] = useState<Conversation | null>(null)
 
     const userInfo = localStorage.getItem("userInfo");
@@ -27,6 +27,40 @@ export default function ChatBox() {
     const handleClickConversation = (id: string) => {
         navigate(`/chat/${id}`);
     };
+    const [now, setNow] = useState(Date.now());
+    useEffect(() => {
+        const i = setInterval(() => setNow(Date.now()), 30000);
+        return () => clearInterval(i);
+    }, []);
+    useEffect(() => {
+        const handler = setTimeout(() => {
+            setDebouncedQuery(searchQuery);
+        }, 1000);
+
+        return () => {
+            clearTimeout(handler);
+        };
+    }, [searchQuery]);
+    //search conversations
+    // Thêm useMemo để tối ưu việc lọc conversations
+    const filteredConversations = useMemo(() => {
+        const q = debouncedQuery.toLowerCase().trim();
+        if (!q) return conversationsAll;
+
+        return conversationsAll.filter((conversation) => {
+            const isGroup = conversation.type === "group";
+            const otherUser = isGroup
+                ? null
+                : conversation.participants?.find((p) => p._id !== currentUserId);
+            const displayName = isGroup ? conversation.name : otherUser?.username;
+            const lastMessageContent = (conversation as any).lastMessage?.content || "";
+
+            return (
+                displayName?.toLowerCase().includes(q) ||
+                lastMessageContent.toLowerCase().includes(q)
+            );
+        });
+    }, [debouncedQuery, conversationsAll, currentUserId]);
 
     // Load online users from API
     const loadOnlineUsers = async () => {
@@ -82,8 +116,28 @@ export default function ChatBox() {
                     }
                 });
                 const data = res.data.data;
+                const sortedData = [...data].sort((a: any, b: any) => {
+                    const aTime = new Date(
+                        a.lastMessage?.createdAt || a.createdAt || 0
+                    ).getTime();
+                    const bTime = new Date(
+                        b.lastMessage?.createdAt || b.createdAt || 0
+                    ).getTime();
 
-                setConversationsAll(data);
+                    return bTime - aTime; // giảm dần => mới nhất lên đầu
+                });
+                // setConversationsAll(sortedData);
+                setConversationsAll((prev) => {
+                    const unreadMap = new Map(prev.map((c) => [c._id, c.unreadCount ?? 0]));
+
+                    const merged = sortedData.map((conv) => ({
+                        ...conv,
+                        unreadCount: conv.unreadCount ?? unreadMap.get(conv._id) ?? 0,
+                    }));
+
+                    return merged;
+                });
+
             } catch (error) {
                 console.error("Lỗi khi lấy conversation:", error);
             }
@@ -117,6 +171,29 @@ export default function ChatBox() {
             window.removeEventListener('userOffline', handleUserOffline as EventListener);
         };
     }, []);
+    useEffect(() => {
+        socket.on(
+            "departmentUpdated",
+            ({ conversationId, oldDepartment, newDepartment }) => {
+                console.log(
+                    `[Realtime] Department updated: ${oldDepartment} → ${newDepartment}`
+                );
+
+                setConversationsAll((prev) =>
+                    prev.map((conv) =>
+                        conv._id === conversationId
+                            ? { ...conv, assignedDepartment: newDepartment }
+                            : conv
+                    )
+                );
+            }
+        );
+
+        // cleanup listener khi component unmount
+        return () => {
+            socket.off("departmentUpdated");
+        };
+    }, []);
 
     const updateConversationPreview = (message: any) => {
         setConversationsAll((prevConvs) => {
@@ -140,8 +217,11 @@ export default function ChatBox() {
                 } as any;
             });
             return [...updated].sort(
-                (a, b) => new Date(a.timestamp || a.createdAt || 0).getTime() - new Date(b.timestamp || b.createdAt || 0).getTime()
-            ).reverse();
+                (a, b) =>
+                    new Date(b.timestamp || b.lastMessage?.createdAt || b.createdAt || 0).getTime() -
+                    new Date(a.timestamp || a.lastMessage?.createdAt || a.createdAt || 0).getTime()
+            );
+
         });
     };
 
@@ -161,9 +241,6 @@ export default function ChatBox() {
                 <div className="sidebar-header">
                     <div className="sidebar-title">
                         <h1>Tin nhắn</h1>
-                        <button className="menu-button">
-                            <MoreVertical size={20} />
-                        </button>
                     </div>
                     <div className="search-container">
                         <Search className="search-icon" size={16} />
@@ -177,96 +254,167 @@ export default function ChatBox() {
                     </div>
                 </div>
 
-                {/* Conversations List */}
+                {/* 🔧 Changed: Dùng filteredConversations thay vì conversationsAll */}
                 <div className="conversations-list">
-                    {conversationsAll?.map((conversation, index) => {
-                        const isGroup = conversation.type === "group";
-                        const onlineStatus = getConversationOnlineStatus(conversation);
+                    {filteredConversations.length > 0 ? (
+                        filteredConversations.map((conversation, index) => {
+                            const isGroup = conversation.type === "group";
+                            const onlineStatus =
+                                getConversationOnlineStatus(conversation);
 
-                        const otherUser = isGroup
-                            ? null
-                            : conversation.participants?.find((p) => p._id !== currentUserId);
+                            const otherUser = isGroup
+                                ? null
+                                : conversation.participants?.find(
+                                    (p) => p._id !== currentUserId
+                                );
 
-                        const displayName = isGroup ? conversation.name : otherUser?.username;
+                            const displayName = isGroup
+                                ? conversation.name
+                                : otherUser?.username;
 
-                        const lastSenderId = (conversation as any).lastMessage?.sender?._id || (conversation as any).lastMessage?.sender;
-                        const isMyLast = String(lastSenderId) === String(currentUserId);
-                        const previewPrefix = isMyLast ? "Bạn: " : "";
-                        const isUnread = !isMyLast && ((conversation.unreadCount as any) || 0) > 0;
+                            const lastSenderId =
+                                (conversation as any).lastMessage?.sender?._id ||
+                                (conversation as any).lastMessage?.sender;
+                            const isMyLast =
+                                String(lastSenderId) === String(currentUserId);
+                            const previewPrefix = isMyLast ? "Bạn: " : "";
+                            const isUnread =
+                                !isMyLast &&
+                                ((conversation.unreadCount as any) || 0) > 0;
 
-                        return (
-                            <div
-                                key={index}
-                                className={`conversation-item ${currentConversation?._id === conversation._id ? "active" : ""
-                                    }`}
-                                onClick={() => handleClickConversation(conversation._id)}
-                            >
-                                <div className="avatar-container">
-                                    {isGroup ? (
-                                        <div className={`group-avatar group-${Math.min(conversation.participants?.length || 0, 4)}`}>
-                                            {conversation.participants?.slice(0, 4).map((participant, idx) => (
-                                                <img
-                                                    key={participant._id}
-                                                    src={participant.avatar || "/placeholder.svg"}
-                                                    alt={participant.username}
-                                                    className={`slot slot-${idx + 1}`}
-                                                />
-                                            ))}
-                                            {conversation.participants && conversation.participants.length > 4 && (
-                                                <div className="group-avatar-overflow">
-                                                    +{conversation.participants.length - 4}
+                            return (
+                                <div
+                                    key={index}
+                                    className={`conversation-item ${currentConversation?._id ===
+                                        conversation._id
+                                        ? "active"
+                                        : ""
+                                        }`}
+                                    onClick={() =>
+                                        handleClickConversation(conversation._id)
+                                    }
+                                >
+                                    <div className="avatar-container">
+                                        {isGroup ? (
+                                            <div
+                                                className={`group-avatar group-${Math.min(
+                                                    conversation.participants
+                                                        ?.length || 0,
+                                                    4
+                                                )}`}
+                                            >
+                                                {conversation.participants
+                                                    ?.slice(0, 4)
+                                                    .map((participant, idx) => (
+                                                        <img
+                                                            key={participant._id}
+                                                            src={
+                                                                participant.avatar ||
+                                                                "/placeholder.svg"
+                                                            }
+                                                            alt={
+                                                                participant.username
+                                                            }
+                                                            className={`slot slot-${idx + 1
+                                                                }`}
+                                                        />
+                                                    ))}
+                                                {conversation.participants &&
+                                                    conversation.participants
+                                                        .length > 4 && (
+                                                        <div className="group-avatar-overflow">
+                                                            +
+                                                            {conversation.participants
+                                                                .length - 4}
+                                                        </div>
+                                                    )}
+                                            </div>
+                                        ) : (
+                                            <img
+                                                src={
+                                                    otherUser?.avatar ||
+                                                    "/placeholder.svg"
+                                                }
+                                                className="avatar"
+                                                alt={displayName}
+                                            />
+                                        )}
+                                        {onlineStatus.hasOnlineUsers && (
+                                            <div
+                                                className="online-indicator"
+                                                title={
+                                                    isGroup
+                                                        ? `${onlineStatus.onlineCount}/${onlineStatus.totalCount} thành viên online`
+                                                        : "Đang online"
+                                                }
+                                            ></div>
+                                        )}
+                                    </div>
+
+                                    <div className="conversation-content">
+                                        <div className="conversation-header">
+                                            <h3 className="conversation-name">
+                                                {displayName}
+                                            </h3>
+                                            <span className="conversation-time">
+                                                {timeAgo(conversation.updatedAt, now)}
+                                            </span>
+                                        </div>
+                                        <p
+                                            className="conversation-preview"
+                                            style={{
+                                                fontWeight: isUnread
+                                                    ? 800
+                                                    : 400,
+                                            }}
+                                        >
+                                            {previewPrefix}
+                                            {
+                                                (conversation as any)
+                                                    .lastMessage?.content
+                                            }
+                                        </p>
+                                        <div className="conversation-department">
+                                            <span>
+                                                Bộ phận:
+                                                <span
+                                                    className={`department-badge ${(
+                                                        conversation.assignedDepartment || ""
+                                                    ).toLowerCase()}`}
+                                                >
+                                                    {conversation.assignedDepartment
+                                                        ? conversation.assignedDepartment.toUpperCase()
+                                                        : "Không có"}
+                                                </span>
+                                            </span>
+                                        </div>
+                                        {isGroup &&
+                                            onlineStatus.hasOnlineUsers && (
+                                                <div className="online-info">
+                                                    {onlineStatus.onlineCount}{" "}
+                                                    thành viên online
                                                 </div>
                                             )}
-                                        </div>
-                                    ) : (
-                                        <img
-                                            src={otherUser?.avatar || "/placeholder.svg"}
-                                            className="avatar"
-                                            alt={displayName}
-                                        />
-                                    )}
-                                    {onlineStatus.hasOnlineUsers && (
-                                        <div
-                                            className="online-indicator"
-                                            title={
-                                                isGroup
-                                                    ? `${onlineStatus.onlineCount}/${onlineStatus.totalCount} thành viên online`
-                                                    : "Đang online"
-                                            }
-                                        ></div>
-                                    )}
-                                </div>
-
-
-                                <div className="conversation-content">
-                                    <div className="conversation-header">
-                                        <h3 className="conversation-name">{displayName}</h3>
-                                        <span className="conversation-time">
-                                            {formatDate((conversation as any).lastMessage?.createdAt || conversation.createdAt || new Date())}
-                                        </span>
                                     </div>
-                                    <p className="conversation-preview" style={{ fontWeight: isUnread ? 800 : 400 }}>
-                                        {previewPrefix}{(conversation as any).lastMessage?.content}
-                                    </p>
-                                    {isGroup && onlineStatus.hasOnlineUsers && (
-                                        <div className="online-info">
-                                            {onlineStatus.onlineCount} thành viên online
+
+                                    {(conversation.unreadCount ?? 0) > 0 && (
+                                        <div className="unread-badge">
+                                            {conversation.unreadCount}
                                         </div>
                                     )}
                                 </div>
-
-                                {(conversation.unreadCount ?? 0) > 0 && (
-                                    <div className="unread-badge">{conversation.unreadCount}</div>
-                                )}
-                            </div>
-                        );
-                    })}
+                            );
+                        })
+                    ) : (
+                        <div className="no-result text-gray-400 italic px-3 mt-3">
+                            Không tìm thấy cuộc trò chuyện nào.
+                        </div>
+                    )}
                 </div>
-
             </div>
 
             <ConversationDetail />
+        </div>
 
-        </div >
     )
 }

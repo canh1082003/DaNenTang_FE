@@ -33,4 +33,13 @@ socket.on("userOffline", (data) => {
   console.log("User offline:", data);
   window.dispatchEvent(new CustomEvent("userOffline", { detail: data }));
 });
+socket.on(
+  "departmentUpdated",
+  ({ conversationId, oldDepartment, newDepartment }) => {
+    console.log(
+      `[Realtime] Department updated: ${oldDepartment} → ${newDepartment}`
+    );
+  }
+);
+
 export default socket;
