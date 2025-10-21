@@ -41,5 +41,9 @@ socket.on(
     );
   }
 );
+socket.on("platform-status", (data) => {
+  console.log("📡 Received platform update:", data);
+});
+
 
 export default socket;

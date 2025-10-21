@@ -11,8 +11,10 @@
   },
   "dependencies": {
     "axios": "^1.10.0",
+    "dotenv": "^17.2.3",
     "emoji-picker-react": "^4.13.2",
-    "lucide-react": "^0.525.0",
+    "framer-motion": "^12.23.24",
+    "lucide-react": "^0.546.0",
     "marked": "^16.4.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",

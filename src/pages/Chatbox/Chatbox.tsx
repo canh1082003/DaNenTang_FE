@@ -7,7 +7,7 @@ import { Conversation } from "./type"
 import { ALL_CONVERSATIONS } from "../../hooks/auth/chat/constants"
 import api from "../../API/API"
 import socket from "../../Utils/socket"
-import { formatDate, timeAgo, useTimeAgo } from "../../Utils/formatDate"
+import { timeAgo } from "../../Utils/formatDate"
 import ConversationDetail from "../Conversation_Details/ConversationDetail"
 import { useNavigate } from "react-router-dom"
 
