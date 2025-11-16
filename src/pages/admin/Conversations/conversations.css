@@ -2,6 +2,70 @@
   padding: 32px;
   max-width: 1400px;
   margin: 0 auto;
+  /* ===== Filter Bar ===== */
+  .filter-bar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: #ffffff;
+    padding: 10px 16px;
+    border-radius: 12px;
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+    width: fit-content;
+    margin-bottom: 20px;
+    transition: box-shadow 0.3s ease;
+  }
+
+  .filter-bar:hover {
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+  }
+
+  .filter-bar label {
+    font-size: 14px;
+    font-weight: 600;
+    color: #374151;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  /* optional icon trước chữ “Lọc” */
+  .filter-bar label::before {
+    content: "🔍";
+    font-size: 15px;
+    opacity: 0.7;
+  }
+
+  /* ===== Select Dropdown ===== */
+  .filter-bar select {
+    padding: 8px 14px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #111827;
+    background-color: #fff;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    outline: none;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%236366f1'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7' /%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 18px;
+    padding-right: 36px;
+  }
+
+  .filter-bar select:hover {
+    border-color: #6366f1;
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+  }
+
+  .filter-bar select:focus {
+    border-color: #4f46e5;
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.25);
+  }
 
   .page-header {
     display: flex;

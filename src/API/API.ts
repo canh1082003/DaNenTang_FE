@@ -13,7 +13,7 @@ export class Api {
   constructor() {
     this.instance = axios.create({
       baseURL,
-      timeout: 10000,
+      timeout: 6000,
       headers: {
         "Content-Type": "application/json",
       },
@@ -30,7 +30,7 @@ export class Api {
               toast.success("Register Success");
               setTimeout(() => {
                 window.location.href = "/login";
-              }, 6000);
+              }, 200);
             }
 
             return response;
@@ -41,17 +41,18 @@ export class Api {
             const userInfo = LoginResponse.data.data;
             localStorage.setItem("userInfo", JSON.stringify(userInfo));
 
-            if (userInfo.role === "admin") window.location.href = "/homeAdmin";
-            else if (userInfo.role === "user") {
+            if (userInfo.role === "admin") window.location.href = "/admin";
+            else if (userInfo.role === "staff") {
               toast.success("Đăng Nhập Thành Công");
               setTimeout(() => {
                 window.location.href = "/Chatbox";
-              }, 6000);
+              }, 2000);
+            
             } else {
               toast.success("Đăng Nhập Thành Công");
               setTimeout(() => {
                 window.location.href = "/Chatbox";
-              }, 5000);
+              }, 2000);
             }
             return response;
           }
@@ -68,7 +69,15 @@ export class Api {
       },
       (error: any) => {
         const errorData = error.response?.data;
+        const errorStatus = error.response?.status;
         console.log(errorData);
+        if (errorStatus === 403) {
+                window.location.href = "/403";
+            
+        }
+        if (errorStatus === 401) {
+          window.location.href = "/login";
+        }
         const errorMessage = errorData?.message || "Đã xảy ra lỗi";
         toast.error(errorMessage);
       }

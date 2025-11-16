@@ -19,7 +19,6 @@ export default function AuthForm() {
         confirmPassword: "",
         username: "",
     })
-    const [isLoading, setIsLoading] = useState(false)
 
 
 
@@ -29,8 +28,6 @@ export default function AuthForm() {
             email: loginData.email,
             password: loginData.password
         })
-
-        setIsLoading(true)
     }
 
     const handleRegisterSubmit = async (e: React.FormEvent) => {
@@ -40,7 +37,6 @@ export default function AuthForm() {
             email: registerData.email,
             password: registerData.password
         })
-        setIsLoading(true)
     }
 
     return (
@@ -123,8 +119,8 @@ export default function AuthForm() {
                                         </button>
                                     </div>
 
-                                    <button type="submit" className="button" disabled={isLoading} >
-                                        {isLoading ? "Đang đăng nhập..." : "Đăng nhập"}
+                                    <button type="submit" className="button"  >
+                                       Đăng nhập
                                     </button>
                                 </form>
                             </div>
@@ -225,8 +221,8 @@ export default function AuthForm() {
                                         </label>
                                     </div>
 
-                                    <button type="submit" className="button" disabled={isLoading}>
-                                        {isLoading ? "Đang tạo tài khoản..." : "Tạo tài khoản"}
+                                    <button type="submit" className="button" >
+                                      "Tạo tài khoản
                                     </button>
                                 </form>
                             </div>

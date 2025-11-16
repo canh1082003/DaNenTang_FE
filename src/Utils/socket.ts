@@ -1,6 +1,7 @@
 import { io, Socket } from "socket.io-client";
 
-const SOCKET_URL = "http://localhost:4000";
+const SOCKET_URL = import.meta.env.VITE_API_URL || "http://localhost:4000";
+
 const userInfo = localStorage.getItem("userInfo");
 const token = userInfo ? JSON.parse(userInfo).token : null;
 
@@ -44,6 +45,8 @@ socket.on(
 socket.on("platform-status", (data) => {
   console.log("📡 Received platform update:", data);
 });
-
+// socket.onAny((event, data) => {
+//   console.log("🛰️ [SOCKET ANY EVENT]", event, data);
+// });
 
 export default socket;

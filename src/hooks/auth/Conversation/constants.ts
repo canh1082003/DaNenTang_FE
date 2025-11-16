@@ -1,0 +1,5 @@
+export const GET_ALL_CONVERSATION_ADMIN= 'conversation/admin/all'
+export const ADD_MEMBER= 'conversation/'
+export const REMOVE_MEMBER= 'conversation/'
+export const LEAVE_CONVERSATION= 'conversation/delete'
+export const GET_CONVERSATION= 'conversation'

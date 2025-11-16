@@ -3,6 +3,7 @@ export interface UserSummary {
   username?: string;
   avatar?: string;
   isOnline?: boolean;
+  role:string;
 }
 
 export interface Message {
@@ -30,6 +31,7 @@ export interface Conversation {
     sender: string | UserSummary;
   };
   createdAt?: Date | string;
+  updatedAt?: Date | string;
   timestamp?: string | Date;
   unreadCount?: number;
   online?: boolean;

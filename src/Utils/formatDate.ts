@@ -26,3 +26,13 @@ export const timeAgo = (date: string | Date) => {
   const diffDays = Math.floor(diffHours / 24);
   return `${diffDays} ngày trước`;
 };
+export const getPlatformFromName = (name: string): string => {
+  if(!name) return "Unknown";
+  const lower = name.toLowerCase();
+  if (lower.includes("facebook")) return "Facebook";
+  if (lower.includes("telegram")) return "Telegram";
+  if (lower.includes("instagram")) return "Instagram";
+  if (lower.includes("whatsapp")) return "WhatsApp";
+  if (lower.includes("twitter")) return "Twitter";
+  return "Unknown";
+};

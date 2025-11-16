@@ -98,19 +98,28 @@
       .platform-actions {
         display: flex;
         gap: 12px;
-       
+
         .btn-secondary {
           flex: 1;
-           background: rgb(32, 135, 173);
-           border:none;
-           padding:5px;
-           border-radius: 20px;
-           color:white;
+          background: rgb(32, 135, 173);
+          border: none;
+          padding: 5px;
+          border-radius: 20px;
+          color: white;
         }
-        .btn-icon{
-            border:none;
-            font-size:30px;
-            background-color: #fff;;
+        .btn-icon {
+          border: none;
+          font-size: 30px;
+          background-color: #fff;
+        }
+        .btn-danger {
+          background-color: #ce3d3d;
+          color: white;
+          border: none;
+        }
+
+        .btn-danger:hover {
+          background-color: #dc2626; /* đỏ đậm hơn khi hover */
         }
       }
     }

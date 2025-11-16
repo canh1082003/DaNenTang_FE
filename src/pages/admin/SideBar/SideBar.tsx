@@ -2,12 +2,21 @@ import { useState } from "react"
 import "./Sidebar.css"
 import { menuItems } from "./AdminMenuItem"
 import { NavLink } from "react-router-dom"
+import { useAdmin } from "../../../hooks/auth/InfoAdmin/useAdmin"
+import { useLogout } from "../../../hooks/auth/Logout/Logout"
+import { LoadingModal } from "../../../components/Loading/ModalLoading"
 
 
 export default function Sidebar( ) {
   const [isCollapsed, setIsCollapsed] = useState(false)
+  const { adminInfo, loading } = useAdmin();
+  const [showMenu, setShowMenu] = useState(false);
+  const { loading : loadingLogout, logout } = useLogout();
 
-
+  const handleLogout = () => {
+    logout();
+    <LoadingModal show={loadingLogout} text="Đang xử lý kết nối..." />
+  }
   return (
     <aside className={`sidebar ${isCollapsed ? "collapsed" : ""}`}>
       <div className="sidebar-header">
@@ -44,12 +53,27 @@ export default function Sidebar( ) {
           <div className="avatar">👤</div>
           {!isCollapsed && (
             <div className="user-info">
-              <p className="user-name">John Doe</p>
-              <p className="user-email">john@example.com</p>
+              <p className="user-name">{adminInfo?.username || "Unknown"}</p>
+              <p className="user-email">{adminInfo?.email || "Unknown"}</p>
             </div>
           )}
+           <div
+          className="settings-icon"
+          onClick={() => setShowMenu((prev) => !prev)}
+        >
+          ⚙️
+        </div>
+
+        {/* Menu dropdown */}
+        {showMenu && (
+          <div className="user-menu">
+            <button onClick={handleLogout}>Đăng Xuất</button>
+          </div>
+        )}
         </div>
       </div>
+            
+      
     </aside>
   )
 }

@@ -19,9 +19,8 @@ export const ContentMessage = memo(function ContentMessage({
     return (
         <div className="messages-container" ref={containerRef}>
             {messages?.map((msg: any, index: number) => {
-                console.log(msg)
-                const senderId = msg.sender?._id;
-                const isMe = senderId === myId;
+                const senderId = msg.sender?._id 
+                const isMe = senderId === myId || msg.sender?.role=== "assistant";
                 const senderInfo = currentConversation?.participants?.find((p: any) => p._id === senderId);
 
                 return (

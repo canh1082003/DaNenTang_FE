@@ -53,7 +53,18 @@
   font-size: 28px;
   color: white;
 }
-
+.conversation{
+  background-color: #3B82F6;
+}
+.active{
+  background-color: #10B981;
+}
+.message{
+  background-color: #F59E0B;
+}
+.response{
+  background-color: #8B5CF6;
+}
 .stat-content {
   flex: 1;
 }
@@ -178,10 +189,16 @@
   font-size: 13px;
   color: #7f8c8d;
   margin: 0;
-  white-space: nowrap;
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 1; /* chỉ hiển thị 1 dòng */
+  -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
+  max-width: 95%; /* tránh bị tràn khi có icon hoặc thời gian bên phải */
+  word-break: break-word; /* để phòng trường hợp text không có khoảng trắng */
 }
+
 
 .conv-time {
   font-size: 12px;

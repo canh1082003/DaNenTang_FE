@@ -4,114 +4,96 @@ import { useEffect, useState } from "react";
 import "./platforms.css";
 import { disconnectPlatform } from "../../../hooks/auth/platform/useDisconnect";
 import { connectPlatform } from "../../../hooks/auth/platform/useConnect";
-import { LoadingSpinner } from "../../../components/Loading/LoadingSpinner";
 import { LoadingModal } from "../../../components/Loading/ModalLoading";
-import io from "socket.io-client";
+import usePlatformStatus from "../../../hooks/auth/platform/usePlatformStatus";
 
-const url_ngrok =import.meta.env.VITE_API_URL
-
-const socket = io(url_ngrok!, {
-  transports: ["websocket"],
-});
 export default function Platforms() {
   const [loadingId, setLoadingId] = useState<number | null>(null);
   const [loading, setLoading] = useState(false);
-
-  const [platforms, setPlatforms] = useState([
-    {
-      id: 1,
-      name: "Facebook",
-      status: "connected",
-      users: 1250,
-      messages: 5420,
-    },
-    { id: 4, name: "Telegram", status: "disconnected", users: 0, messages: 0 },
-  ]);
-  useEffect(() => {
-  socket.on("connect", () => {
-    console.log("✅ Connected to backend via socket:", socket.id);
-
-    const userInfo = localStorage.getItem("userInfo");
-    const userId = userInfo ? JSON.parse(userInfo).id : null;
-    if (userId) {
-      socket.emit("setup", userId);
-      console.log("Setup socket cho user:", userId);
-    }
-  });
-
-  // Lắng nghe update từ server
-  socket.on("platform-status", (data: { name: string; status: string }) => {
-    console.log("📡 Received platform update:", data);
-
-    // Cập nhật state platform tương ứng
-    setPlatforms((prev) =>
-      prev.map((p) =>
-        p.name.toLowerCase() === data.name.toLowerCase()
-          ? { ...p, status: data.status }
-          : p
-      )
-    );
-  });
-
-  socket.on("disconnect", () => {
-    console.warn("⚠️ Socket disconnected");
-  });
-
-  // Cleanup
-  return () => {
-    socket.off("platform-status");
-    socket.off("connect");
-    socket.off("disconnect");
-  };
-}, []);
-
+  const { platforms, loading: loadingPlatforms ,refetch} = usePlatformStatus();
+  console.log(platforms);
+ 
   const [showModal, setShowModal] = useState(false);
   const [newPlatform, setNewPlatform] = useState({ name: "", apiKey: "" });
 
-  const handleAddPlatform = () => {
-    if (newPlatform.name && newPlatform.apiKey) {
-      setPlatforms([
-        ...platforms,
+  //   if (!newPlatform.name || !newPlatform.apiKey) return;
+
+  //   try {
+  //     setLoading(true);
+  //     await connectPlatform(newPlatform.name, newPlatform.apiKey);
+
+  //     // Không cần setPlatforms — socket sẽ emit platform-status khi BE xong
+  //     setNewPlatform({ name: "", apiKey: "" });
+  //     setShowModal(false);
+  //   } catch (err) {
+  //     console.error("❌ Lỗi khi thêm platform:", err);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
+  const handleAddPlatform = async () => {
+    if (!newPlatform.name || !newPlatform.apiKey) return;
+    try {
+      setLoading(true);
+      const addedPlatform = await connectPlatform(
+        newPlatform.name,
+        newPlatform.apiKey
+      );
+
+      // ✅ Cập nhật danh sách trực tiếp
+      setPlatforms((prev) => [
+        ...prev,
         {
-          id: platforms.length + 1,
+          id: addedPlatform.id ?? Date.now(), // phòng khi BE không trả id
           name: newPlatform.name,
-          status: "connected",
           users: 0,
           messages: 0,
+          status: "connected",
         },
       ]);
+
       setNewPlatform({ name: "", apiKey: "" });
       setShowModal(false);
+    } catch (err) {
+      console.error("❌ Lỗi khi thêm platform:", err);
+    } finally {
+      setLoading(false);
     }
   };
 
-  const handleDeletePlatform = (id: number) => {
-    setPlatforms(platforms.filter((p) => p.id !== id));
+  const handleDeletePlatform = async (id: number, name: string) => {
+    try {
+      setLoading(true);
+      await disconnectPlatform(name, id);
+    } catch (err) {
+      console.error("❌ Lỗi khi xóa platform:", err);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const handleToggleStatus = async (id: number) => {
-    const platform = platforms.find((p) => p.id === id);
+  const handleToggleStatus = async (id: string) => {
+    const platform = platforms.find((p) => p._id === id || p._doc?._id === id);
+    console.log(platform)
     if (!platform) return;
+
+    setLoadingId(id);
     setLoading(true);
     try {
-      if (platform.status === "connected") {
-        await disconnectPlatform(platform.name, id);
+      const currentStatus = platform.status || platform._doc?.status;
+      const platformName = platform.name || platform._doc?.name;
+
+      if (currentStatus === "connected") {
+        await disconnectPlatform(platformName, id);
       } else {
-        await connectPlatform(platform.name, id);
+        await connectPlatform(platformName, id);
       }
 
-      setPlatforms((prev) =>
-        prev.map((p) =>
-          p.id === id
-            ? {
-                ...p,
-                status: p.status === "connected" ? "disconnected" : "connected",
-              }
-            : p
-        )
-      );
-    } catch (error) {
-      console.error("Lỗi khi toggle:", error);
+      // ✅ Refetch lại danh sách từ DB
+      await refetch();
+
+    } catch (err) {
+      console.error("❌ Lỗi khi toggle:", err);
     } finally {
       setLoadingId(null);
       setLoading(false);
@@ -128,42 +110,45 @@ export default function Platforms() {
       </div>
 
       <div className="platforms-grid">
-        {platforms.map((platform) => (
-          <div key={platform.id} className="platform-card">
+        {platforms?.map((platform, index) => (
+          <div key={index} className="platform-card">
             <div className="platform-header">
-              <h3>{platform.name}</h3>
-              <span className={`status-badge ${platform.status}`}>
-                {platform.status}
+              <h3>{platform._doc.name}</h3>
+              <span className={`status-badge ${platform._doc.name}`}>
+                {platform._doc.status}
               </span>
             </div>
             <div className="platform-stats">
               <div className="stat">
                 <span className="stat-label">Users</span>
-                <span className="stat-value">{platform.users}</span>
+                <span className="stat-value">{platform.totalUsers}</span>
               </div>
               <div className="stat">
                 <span className="stat-label">Messages</span>
-                <span className="stat-value">{platform.messages}</span>
+                <span className="stat-value">{platform.totalMessages}</span>
               </div>
             </div>
             <div className="platform-actions">
+            
               <button
-                className="btn-secondary"
-                onClick={() => handleToggleStatus(platform.id)}
-                disabled={loadingId === platform.id}
+                className={`btn-secondary ${
+                  platform._doc.status === "connected" ? "btn-danger" : ""
+                }`}
+                onClick={() => handleToggleStatus(platform._id || platform._doc._id)}
+                disabled={loadingId === platform._doc.id}
               >
-                {loadingId === platform.id
-                  ? platform.status === "connected"
+                {loadingId === platform._doc.id
+                  ? platform._doc.status === "connected"
                     ? "Disconnecting..."
                     : "Connecting..."
-                  : platform.status === "connected"
+                  : platform._doc.status === "connected"
                   ? "Disconnect"
                   : "Connect"}
               </button>
 
               <button
                 className="btn-icon delete"
-                onClick={() => handleDeletePlatform(platform.id)}
+                onClick={() => handleDeletePlatform(platform.id, platform.name)}
               >
                 🗑️
               </button>

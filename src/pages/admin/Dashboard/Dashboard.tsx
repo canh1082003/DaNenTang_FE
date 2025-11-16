@@ -1,18 +1,46 @@
-import "./Dashboard.css"
+import "./Dashboard.css";
+import {
+  usePlatforms,
+  useRecentConversations,
+  useTotalConversations,
+} from "../../../hooks/auth/dashboard/useDashboard";
+import { LoadingModal } from "../../../components/Loading/ModalLoading";
+import { getPlatformFromName, timeAgo } from "../../../Utils/formatDate";
+import VietQR from "../../QRCode/QR";
 export default function Dashboard() {
-  const stats = [
-    { label: "Total Conversations", value: "1,234", icon: "💬", color: "#3B82F6" },
-    { label: "Active Platforms", value: "5", icon: "🌐", color: "#10B981" },
-    { label: "Messages Today", value: "892", icon: "📨", color: "#F59E0B" },
-    { label: "Response Rate", value: "98.5%", icon: "✅", color: "#8B5CF6" },
-  ]
+  const { totalConversations, loading } = useTotalConversations();
+  const { recentConversations, loading: loadingRecent } =
+    useRecentConversations();
 
-  const recentConversations = [
-    { id: 1, user: "Alice Johnson", platform: "Facebook", message: "Hi, I need help...", time: "2 min ago" },
-    { id: 2, user: "Bob Smith", platform: "WhatsApp", message: "Thanks for the update", time: "15 min ago" },
-    { id: 3, user: "Carol White", platform: "Instagram", message: "Can you check my order?", time: "1 hour ago" },
-    { id: 4, user: "David Brown", platform: "Telegram", message: "Perfect, thank you!", time: "2 hours ago" },
-  ]
+  const PlatformStatus = () => {
+    const { platforms, loading, error } = usePlatforms();
+
+    if (loading) return <p>Đang tải...</p>;
+    if (error) return <p className="text-red-500">{error}</p>;
+
+    return (
+      <div className="platform-status">
+        {platforms.map((p,index ) => (
+          <div key={index} className="status-item">
+            <span
+              className={`status-dot ${
+                p._doc.status === "connected" ? "online" : "offline"
+              }`}
+            ></span>
+            <span className="status-name">{p._doc.name}</span>
+            <span
+              className={`status-badge ${
+                p._doc.status === "connected" ? "connected" : "disconnected"
+              }`}
+            >
+              {p._doc.status === "connected" ? "Connected" : "Disconnected"}
+            </span>
+          </div>
+        ))}
+        <LoadingModal show={loadingRecent} text="Đang loadinggg..." />
+      </div>
+    );
+  };
 
   return (
     <div className="dashboard-page">
@@ -22,19 +50,40 @@ export default function Dashboard() {
       </div>
 
       <div className="stats-grid">
-        {stats.map((stat, index) => (
-          <div key={index} className="stat-card">
-            <div className="stat-icon" style={{ backgroundColor: stat.color }}>
-              {stat.icon}
-            </div>
-            <div className="stat-content">
-              <p className="stat-label">{stat.label}</p>
-              <p className="stat-value">{stat.value}</p>
-            </div>
+        <div className="stat-card">
+          <div className="stat-icon conversation">💬</div>
+          <div className="stat-content">
+            <p className="stat-label">Total Conversations</p>
+            <p className="stat-value">
+              {totalConversations?.totalConversations}
+            </p>
           </div>
-        ))}
+        </div>
+        <div className="stat-card">
+          <div className="stat-icon active">🌐</div>
+          <div className="stat-content">
+            <p className="stat-label">Active Platforms</p>
+            <p className="stat-value">{totalConversations?.activePlatforms}</p>
+          </div>
+        </div>
+        <div className="stat-card ">
+          <div className="stat-icon message">📨</div>
+          <div className="stat-content">
+            <p className="stat-label">Message Today</p>
+            <p className="stat-value">{totalConversations?.messagesToday}</p>
+          </div>
+        </div>
+        <div className="stat-card">
+          <div className="stat-icon response">✅</div>
+          <div className="stat-content ">
+            <p className="stat-label">Response Rate</p>
+            <p className="stat-value">
+              {totalConversations?.totalConversations}
+            </p>
+          </div>
+        </div>
       </div>
-
+      <LoadingModal show={loading} text="Đang loadinggg..." />
       <div className="dashboard-grid">
         <div className="card_dashboard">
           <div className="card-header">
@@ -44,19 +93,29 @@ export default function Dashboard() {
             </a>
           </div>
           <div className="conversations-list">
-            {recentConversations.map((conv) => (
-              <div key={conv.id} className="conversation-item">
-                <div className="conv-avatar">{conv.user.charAt(0)}</div>
-                <div className="conv-content">
-                  <div className="conv-header">
-                    <p className="conv-user">{conv.user}</p>
-                    <span className="conv-platform">{conv.platform}</span>
+            {recentConversations?.map((reccent: any) => {
+              const lastMsg =
+                reccent.lastMessage?.content || "Chưa có tin nhắn";
+              const platform = getPlatformFromName(reccent.name!);
+              const lastTime = reccent.lastMessage?.createdAt
+                ? timeAgo(reccent.lastMessage.createdAt)
+                : "";
+              return (
+                <div key={reccent.id} className="conversation-item">
+                  {/* <div className="conv-avatar">{reccent.user.charAt(0)}</div> */}
+                  <div className="conv-content">
+                    <div className="conv-header">
+                      <p className="conv-user">{reccent.name}</p>
+                      <span className="conv-platform">{platform}</span>
+                    </div>
+                    <p className="conv-message">
+                      {reccent.lastMessage.content}
+                    </p>
                   </div>
-                  <p className="conv-message">{conv.message}</p>
+                  <p className="conv-time">{lastTime}</p>
                 </div>
-                <p className="conv-time">{conv.time}</p>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
 
@@ -64,35 +123,9 @@ export default function Dashboard() {
           <div className="card-header">
             <h2>Platform Status</h2>
           </div>
-          <div className="platform-status">
-            <div className="status-item">
-              <span className="status-dot online"></span>
-              <span className="status-name">Facebook</span>
-              <span className="status-badge">Connected</span>
-            </div>
-            <div className="status-item">
-              <span className="status-dot online"></span>
-              <span className="status-name">WhatsApp</span>
-              <span className="status-badge">Connected</span>
-            </div>
-            <div className="status-item">
-              <span className="status-dot online"></span>
-              <span className="status-name">Instagram</span>
-              <span className="status-badge">Connected</span>
-            </div>
-            <div className="status-item">
-              <span className="status-dot offline"></span>
-              <span className="status-name">Telegram</span>
-              <span className="status-badge">Disconnected</span>
-            </div>
-            <div className="status-item">
-              <span className="status-dot online"></span>
-              <span className="status-name">Twitter</span>
-              <span className="status-badge">Connected</span>
-            </div>
-          </div>
+          <PlatformStatus />
         </div>
       </div>
     </div>
-  )
+  );
 }

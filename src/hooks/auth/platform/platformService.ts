@@ -1,4 +1,3 @@
-// src/hooks/platform/platformService.ts
 import {
   CONNECT_FACEBOOK,
   CONNECT_TELEGRAM,
