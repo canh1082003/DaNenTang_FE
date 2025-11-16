@@ -1,6 +1,6 @@
 import { io, Socket } from "socket.io-client";
 
-const SOCKET_URL = "https://danentang-be.onrender.com/api/v1";
+const SOCKET_URL = "https://danentang-be.onrender.com/";
 
 const userInfo = localStorage.getItem("userInfo");
 const token = userInfo ? JSON.parse(userInfo).token : null;
