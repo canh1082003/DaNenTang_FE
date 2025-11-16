@@ -104,7 +104,7 @@ export function useCall(myId: string) {
     setInCall(false);
     setIncomingCall(null);
 
-    socket.emit("call-end");
+    socket.emit("call-end", { targetId: incomingCall?.from || target });
   };
 
   // ------------------ SOCKET HANDLERS ------------------

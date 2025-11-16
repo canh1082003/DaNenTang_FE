@@ -182,7 +182,7 @@ export default function ChatBox() {
             Authorization: `Bearer ${token}`,
           },
         });
-        const data = res.data.data;
+        const data = res?.data.data;
         const sortedData = [...data].sort((a: any, b: any) => {
           const aTime = new Date(
             a.lastMessage?.createdAt || a.createdAt || 0
