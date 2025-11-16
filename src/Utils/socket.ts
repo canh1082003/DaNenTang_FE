@@ -1,6 +1,6 @@
 import { io, Socket } from "socket.io-client";
 
-const SOCKET_URL = import.meta.env.VITE_API_URL || "http://localhost:4000";
+const SOCKET_URL = "https://danentang-be.onrender.com/api/v1";
 
 const userInfo = localStorage.getItem("userInfo");
 const token = userInfo ? JSON.parse(userInfo).token : null;
