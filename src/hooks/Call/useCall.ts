@@ -25,8 +25,12 @@ export function useCall(myId: string) {
     });
     localStreamRef.current = stream;
     if (localVideoRef.current) localVideoRef.current.srcObject = stream;
-
-    const res = await api.get(WEBRTC);
+    const token = getToken();
+    const res = await api.get(WEBRTC, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
     const iceServers = res.data.iceServers;
     // Create peer
     const pc = createPeer(targetId, iceServers);
@@ -44,110 +48,113 @@ export function useCall(myId: string) {
   };
 
   // ------------------ CREATE PEER ------------------
-//   const createPeer = (targetId: string) => {
-//     // const pc = new RTCPeerConnection({
-//     //   iceServers: [{ urls: "stun:stun.l.google.com:19302" }],
-//     // });
-//     const res = await api.get("/webRtc");
+  //   const createPeer = (targetId: string) => {
+  //     // const pc = new RTCPeerConnection({
+  //     //   iceServers: [{ urls: "stun:stun.l.google.com:19302" }],
+  //     // });
+  //     const res = await api.get("/webRtc");
 
-//     const pc = new RTCPeerConnection({
-//       iceServers: res.data.iceServers,
-//     });
-//     pc.onicecandidate = (e) => {
-//       if (e.candidate) {
-//         socket.emit("ice-candidate", {
-//           targetId,
-//           from: myId,
-//           candidate: e.candidate,
-//         });
-//       }
-//     };
+  //     const pc = new RTCPeerConnection({
+  //       iceServers: res.data.iceServers,
+  //     });
+  //     pc.onicecandidate = (e) => {
+  //       if (e.candidate) {
+  //         socket.emit("ice-candidate", {
+  //           targetId,
+  //           from: myId,
+  //           candidate: e.candidate,
+  //         });
+  //       }
+  //     };
 
-//     pc.ontrack = (e) => {
-//       if (remoteVideoRef.current) {
-//         remoteVideoRef.current.srcObject = e.streams[0];
-//       }
-//     };
+  //     pc.ontrack = (e) => {
+  //       if (remoteVideoRef.current) {
+  //         remoteVideoRef.current.srcObject = e.streams[0];
+  //       }
+  //     };
 
-//     return pc;
-//   };
-const createPeer = (targetId: string, iceServers: any[]) => {
-  const pc = new RTCPeerConnection({ iceServers });
+  //     return pc;
+  //   };
+  const createPeer = (targetId: string, iceServers: any[]) => {
+    const pc = new RTCPeerConnection({ iceServers });
 
-  pc.onicecandidate = (e) => {
-    if (e.candidate) {
-      socket.emit("ice-candidate", {
-        targetId,
-        from: myId,
-        candidate: e.candidate,
-      });
-    }
+    pc.onicecandidate = (e) => {
+      if (e.candidate) {
+        socket.emit("ice-candidate", {
+          targetId,
+          from: myId,
+          candidate: e.candidate,
+        });
+      }
+    };
+
+    pc.ontrack = (e) => {
+      if (remoteVideoRef.current) {
+        remoteVideoRef.current.srcObject = e.streams[0];
+      }
+    };
+
+    return pc;
   };
-
-  pc.ontrack = (e) => {
-    if (remoteVideoRef.current) {
-      remoteVideoRef.current.srcObject = e.streams[0];
-    }
-  };
-
-  return pc;
-};
-
 
   // ------------------ ACCEPT CALL ------------------
-//   const acceptCall = async () => {
-//     const { from, offer } = incomingCall;
-//     setInCall(true);
+  //   const acceptCall = async () => {
+  //     const { from, offer } = incomingCall;
+  //     setInCall(true);
 
-//     const stream = await navigator.mediaDevices.getUserMedia({
-//       video: true,
-//       audio: true,
-//     });
-//     localStreamRef.current = stream;
-//     if (localVideoRef.current) localVideoRef.current.srcObject = stream;
+  //     const stream = await navigator.mediaDevices.getUserMedia({
+  //       video: true,
+  //       audio: true,
+  //     });
+  //     localStreamRef.current = stream;
+  //     if (localVideoRef.current) localVideoRef.current.srcObject = stream;
 
-//     const pc = createPeer(from);
-//     peerRef.current = pc;
+  //     const pc = createPeer(from);
+  //     peerRef.current = pc;
 
-//     stream.getTracks().forEach((track) => pc.addTrack(track, stream));
+  //     stream.getTracks().forEach((track) => pc.addTrack(track, stream));
 
-//     await pc.setRemoteDescription(new RTCSessionDescription(offer));
-//     const answer = await pc.createAnswer();
-//     await pc.setLocalDescription(answer);
+  //     await pc.setRemoteDescription(new RTCSessionDescription(offer));
+  //     const answer = await pc.createAnswer();
+  //     await pc.setLocalDescription(answer);
 
-//     socket.emit("call-answer", { answer, targetId: from, from: myId });
-//     setIncomingCall(null);
-//   };
-const acceptCall = async () => {
-  const { from, offer } = incomingCall;
-  setInCall(true);
+  //     socket.emit("call-answer", { answer, targetId: from, from: myId });
+  //     setIncomingCall(null);
+  //   };
+  const acceptCall = async () => {
+    const { from, offer } = incomingCall;
+    setInCall(true);
 
-  const stream = await navigator.mediaDevices.getUserMedia({
-    video: true,
-    audio: true,
-  });
+    const stream = await navigator.mediaDevices.getUserMedia({
+      video: true,
+      audio: true,
+    });
 
-  localStreamRef.current = stream;
-  if (localVideoRef.current) localVideoRef.current.srcObject = stream;
+    localStreamRef.current = stream;
+    if (localVideoRef.current) localVideoRef.current.srcObject = stream;
 
-  // 🔥 Lấy ICE server giống bên gọi
-  const res = await api.get(WEBRTC);
-  const iceServers = res.data.iceServers;
+    // 🔥 Lấy ICE server giống bên gọi
+    const token = getToken();
+    const res = await api.get(WEBRTC, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    const iceServers = res.data.iceServers;
 
-  const pc = createPeer(from, iceServers);
-  peerRef.current = pc;
+    const pc = createPeer(from, iceServers);
+    peerRef.current = pc;
 
-  stream.getTracks().forEach((track) => pc.addTrack(track, stream));
+    stream.getTracks().forEach((track) => pc.addTrack(track, stream));
 
-  await pc.setRemoteDescription(new RTCSessionDescription(offer));
-  const answer = await pc.createAnswer();
-  await pc.setLocalDescription(answer);
+    await pc.setRemoteDescription(new RTCSessionDescription(offer));
+    const answer = await pc.createAnswer();
+    await pc.setLocalDescription(answer);
 
-  socket.emit("call-answer", { answer, targetId: from, from: myId });
+    socket.emit("call-answer", { answer, targetId: from, from: myId });
 
-  setIncomingCall(null);
-};
-
+    setIncomingCall(null);
+  };
 
   // ------------------ DECLINE CALL ------------------
   const declineCall = () => {
@@ -171,18 +178,13 @@ const acceptCall = async () => {
   // ------------------ SOCKET HANDLERS ------------------
   useEffect(() => {
     socket.on("call-offer", async ({ from, offer }) => {
-      const token = getToken();
-      const userRes = await api.get(GET_USER, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      const user = userRes.data.data;
+      const userRes = await api.get(`${GET_USER}${from}`);
+      const user = userRes?.data?.data;
       setIncomingCall({
         from,
         offer,
-        username: user.username,
-        avatar: user.avatar,
+        username: user?.username,
+        avatar: user?.avatar,
       });
     });
 
