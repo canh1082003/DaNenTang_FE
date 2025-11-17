@@ -186,7 +186,9 @@
   gap: 8px;
   max-width: 320px;
 }
-
+.message-sender-info{
+  display: block;
+}
 .message-sent .message-content {
   flex-direction: row-reverse;
 }
@@ -201,6 +203,12 @@
 .message-bubble-container {
   display: flex;
   flex-direction: column;
+}
+.message-username {
+  font-size: 13px;
+  font-weight: 500;
+  color: #6b7280; /* Gray-500 mềm hơn */
+  line-height: 1.2;
 }
 
 .message-bubble {
@@ -718,16 +726,92 @@
 .btn-confirm:hover {
   background: #c82333;
 }
-.call-popup {
+/* Nền mờ toàn màn hình */
+.incoming-call-overlay {
   position: fixed;
-  bottom: 30px;
-  left: 30px;
-  background: white;
-  padding: 20px;
-  border-radius: 10px;
-  z-index: 9999;
-  box-shadow: 0 0 15px rgba(0,0,0,0.2);
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(3px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 99999;
 }
+
+/* Khung modal */
+.incoming-call-modal {
+  width: 350px;
+  padding: 30px 20px;
+  background: #fff;
+  border-radius: 20px;
+  text-align: center;
+  animation: popup 0.3s ease;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+}
+
+/* Avatar người gọi */
+.incoming-call-avatar {
+  width: 110px;
+  height: 110px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 15px;
+  border: 4px solid #1877f2;
+}
+
+/* Tên người gọi */
+.incoming-call-name {
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 25px;
+}
+
+/* Hàng nút */
+.incoming-call-actions {
+  display: flex;
+  justify-content: space-around;
+  gap: 20px;
+}
+
+/* Nút */
+.btn {
+  width: 120px;
+  padding: 12px 0;
+  border-radius: 30px;
+  font-size: 16px;
+  cursor: pointer;
+  border: none;
+  font-weight: 600;
+  color: white;
+  transition: 0.2s;
+}
+
+.btn.accept {
+  background: #31c76a;
+}
+.btn.accept:hover {
+  background: #29b15d;
+}
+
+.btn.decline {
+  background: #ff4f4f;
+}
+.btn.decline:hover {
+  background: #e64545;
+}
+
+/* Animation nhẹ */
+@keyframes popup {
+  from {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
 
 .call-screen {
   position: fixed;

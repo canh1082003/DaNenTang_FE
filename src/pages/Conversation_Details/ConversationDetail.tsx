@@ -387,7 +387,7 @@ export default function ConversationDetail({
 
   const renderHeaderAvatar = () => {
     if (!currentConversation) return null;
-    if (currentConversation.type === "group") {
+    if (currentConversation.type === "private") {
       const otherUser = currentConversation.participants.find(
         (p) => p._id !== myId
       );
@@ -692,28 +692,45 @@ export default function ConversationDetail({
 
         <div className="chat-header-actions">
           {/* {chatType === "staff" && ( */}
-            <>
-              <button
-                className="action-button"
-                onClick={() => {
-                  const other = currentConversation?.participants.find(
-                    (p) => p._id !== myId
-                  );
-                  if (other) startCall(other._id);
-                }}
-              >
-                <Phone size={20} />
-              </button>
-              <button className="action-button">
-                <Video size={20} />
-              </button>
-            </>
+          <>
+            <button
+              className="action-button"
+              onClick={() => {
+                const other = currentConversation?.participants.find(
+                  (p) => p._id !== myId
+                );
+                if (other) startCall(other._id);
+              }}
+            >
+              <Phone size={20} />
+            </button>
+            <button className="action-button">
+              <Video size={20} />
+            </button>
+          </>
           {/* )} */}
           {incomingCall && (
-            <div className="call-popup">
-              <h3>Cuộc gọi đến...</h3>
-              <button onClick={acceptCall}>Chấp nhận</button>
-              <button onClick={declineCall}>Từ chối</button>
+            <div className="incoming-call-overlay">
+              <div className="incoming-call-modal">
+                <img
+                  src={incomingCall.avatar || "https://i.imgur.com/6VBx3io.png"}
+                  alt="avatar"
+                  className="incoming-call-avatar"
+                />
+
+                <h2 className="incoming-call-name">
+                  {incomingCall.username || "Ai đó"} đang gọi cho bạn...
+                </h2>
+
+                <div className="incoming-call-actions">
+                  <button className="btn accept" onClick={acceptCall}>
+                    Chấp nhận
+                  </button>
+                  <button className="btn decline" onClick={declineCall}>
+                    Từ chối
+                  </button>
+                </div>
+              </div>
             </div>
           )}
 

@@ -1,5 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import socket from "../../Utils/socket";
+import api from "../../API/API";
+import { GET_USER } from "./constants";
+import { getToken } from "../../Utils/getToken";
 
 export function useCall(myId: string) {
   const [incomingCall, setIncomingCall] = useState<any>(null);
@@ -109,8 +112,20 @@ export function useCall(myId: string) {
 
   // ------------------ SOCKET HANDLERS ------------------
   useEffect(() => {
-    socket.on("call-offer", ({ from, offer }) => {
-      setIncomingCall({ from, offer });
+    socket.on("call-offer", async ({ from, offer }) => {
+      const token = getToken();
+      const userRes = await api.get(GET_USER, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      const user = userRes.data.data;
+      setIncomingCall({
+        from,
+        offer,
+        username: user.username,
+        avatar: user.avatar,
+      });
     });
 
     socket.on("call-answer", async ({ answer }) => {
