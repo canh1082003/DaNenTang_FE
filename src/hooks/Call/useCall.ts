@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import socket from "../../Utils/socket";
 import api from "../../API/API";
-import { GET_USER } from "./constants";
+import { GET_USER, WEBRTC } from "./constants";
 import { getToken } from "../../Utils/getToken";
 
 export function useCall(myId: string) {
@@ -26,7 +26,7 @@ export function useCall(myId: string) {
     localStreamRef.current = stream;
     if (localVideoRef.current) localVideoRef.current.srcObject = stream;
 
-    const res = await api.get("/webRtc");
+    const res = await api.get(WEBRTC);
     const iceServers = res.data.iceServers;
     // Create peer
     const pc = createPeer(targetId, iceServers);
@@ -131,7 +131,7 @@ const acceptCall = async () => {
   if (localVideoRef.current) localVideoRef.current.srcObject = stream;
 
   // 🔥 Lấy ICE server giống bên gọi
-  const res = await api.get("/webRtc");
+  const res = await api.get(WEBRTC);
   const iceServers = res.data.iceServers;
 
   const pc = createPeer(from, iceServers);
