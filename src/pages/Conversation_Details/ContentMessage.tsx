@@ -24,7 +24,6 @@ export const ContentMessage = memo(function ContentMessage({
         const senderInfo = currentConversation?.participants?.find(
           (p: any) => p._id === senderId
         );
-        console.log(senderInfo);
         return (
           <div
             key={msg._id}

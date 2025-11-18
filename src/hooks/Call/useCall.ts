@@ -178,6 +178,7 @@ export function useCall(myId: string) {
   // ------------------ SOCKET HANDLERS ------------------
   useEffect(() => {
     socket.on("call-offer", async ({ from, offer }) => {
+        console.log(from)
       const userRes = await api.get(`${GET_USER}${from}`);
       const user = userRes?.data?.data;
       setIncomingCall({
