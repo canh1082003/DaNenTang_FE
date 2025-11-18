@@ -31,7 +31,7 @@ export function useCall(myId: string) {
         Authorization: `Bearer ${token}`,
       },
     });
-    const iceServers = res.data.iceServers;
+    const iceServers = res?.data?.iceServers;
     // Create peer
     const pc = createPeer(targetId, iceServers);
     peerRef.current = pc;
@@ -140,7 +140,7 @@ export function useCall(myId: string) {
         Authorization: `Bearer ${token}`,
       },
     });
-    const iceServers = res.data.iceServers;
+    const iceServers = res?.data?.iceServers;
 
     const pc = createPeer(from, iceServers);
     peerRef.current = pc;
