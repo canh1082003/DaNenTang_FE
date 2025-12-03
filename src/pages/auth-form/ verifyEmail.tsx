@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import './VerifyEmail.css';
+import './verifyEmail.css';
 import { useParams } from 'react-router-dom';
 
 interface VerifyEmailProps {
