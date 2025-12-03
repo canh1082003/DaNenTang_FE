@@ -3,336 +3,6 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #f9fafb;
-  padding: 3rem 1rem;
-}
-
-.card {
-  width: 100%;
-  max-width: 28rem;
-  background: white;
-  border-radius: 0.5rem;
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
-  border: 1px solid #e5e7eb;
-}
-
-.cardHeader {
-  padding: 1.5rem 1.5rem 0;
-  text-align: center;
-}
-
-.cardTitle {
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: #111827;
-  margin: 0 0 0.5rem 0;
-}
-
-.cardDescription {
-  color: #6b7280;
-  font-size: 0.875rem;
-  margin: 0;
-}
-
-.cardContent {
-  padding: 1.5rem;
-}
-
-.tabs {
-  width: 100%;
-}
-
-.tabsList {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  background-color: #f3f4f6;
-  border-radius: 0.375rem;
-  padding: 0.25rem;
-  margin-bottom: 1rem;
-}
-
-.tabsTrigger {
-  background: none;
-  border: none;
-  padding: 0.5rem 1rem;
-  border-radius: 0.25rem;
-  font-size: 0.875rem;
-  font-weight: 500;
-  color: #6b7280;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.tabsTrigger:hover {
-  color: #374151;
-}
-
-.tabsTrigger.active {
-  background-color: white;
-  color: #111827;
-  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-}
-
-.tabsContent {
-  margin-top: 1rem;
-}
-
-.form {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-
-.formGroup {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-.label {
-  font-size: 0.875rem;
-  font-weight: 500;
-  color: #374151;
-}
-
-.inputWrapper {
-  position: relative;
-}
-
-.input {
-  width: 100%;
-  padding: 0.75rem 1rem;
-  border: 1px solid #d1d5db;
-  border-radius: 0.375rem;
-  font-size: 0.875rem;
-  transition: border-color 0.2s, box-shadow 0.2s;
-  box-sizing: border-box;
-}
-
-.input:focus {
-  outline: none;
-  border-color: #3b82f6;
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-}
-
-.inputWithIcon {
-  padding-left: 2.5rem;
-}
-
-.inputWithToggle {
-  padding-right: 2.5rem;
-}
-
-.inputIcon {
-  position: absolute;
-  left: 0.75rem;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 1rem;
-  height: 1rem;
-  color: #9ca3af;
-}
-
-.toggleButton {
-  position: absolute;
-  right: 0.75rem;
-  top: 50%;
-  transform: translateY(-50%);
-  background: none;
-  border: none;
-  cursor: pointer;
-  color: #9ca3af;
-  padding: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.toggleButton:hover {
-  color: #6b7280;
-}
-
-.toggleButton svg {
-  width: 1rem;
-  height: 1rem;
-}
-
-.error {
-  color: #ef4444;
-  font-size: 0.875rem;
-  margin-top: 0.25rem;
-}
-
-.rememberRow {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin: 0.5rem 0;
-}
-
-.checkboxGroup {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.checkbox {
-  width: 1rem;
-  height: 1rem;
-  border-radius: 0.25rem;
-  border: 1px solid #d1d5db;
-}
-
-.checkboxLabel {
-  font-size: 0.875rem;
-  color: #374151;
-}
-
-.forgotLink {
-  background: none;
-  border: none;
-  color: #3b82f6;
-  font-size: 0.875rem;
-  cursor: pointer;
-  text-decoration: none;
-}
-
-.forgotLink:hover {
-  color: #2563eb;
-  text-decoration: underline;
-}
-
-.button {
-  width: 100%;
-  padding: 0.75rem 1rem;
-  background-color: #3b82f6;
-  color: white;
-  border: none;
-  border-radius: 0.375rem;
-  font-size: 0.875rem;
-  font-weight: 500;
-  cursor: pointer;
-  transition: background-color 0.2s;
-}
-
-.button:hover:not(:disabled) {
-  background-color: #2563eb;
-}
-
-.button:disabled {
-  background-color: #9ca3af;
-  cursor: not-allowed;
-}
-
-.termsGroup {
-  display: flex;
-  align-items: flex-start;
-  gap: 0.5rem;
-  margin: 0.5rem 0;
-}
-
-.termsLabel {
-  font-size: 0.875rem;
-  color: #374151;
-  line-height: 1.4;
-}
-
-.termsLink {
-  color: #3b82f6;
-  text-decoration: none;
-  background: none;
-  border: none;
-  cursor: pointer;
-  font-size: inherit;
-}
-
-.termsLink:hover {
-  color: #2563eb;
-  text-decoration: underline;
-}
-
-.divider {
-  margin: 1.5rem 0;
-  position: relative;
-}
-
-.dividerLine {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-}
-
-.dividerBorder {
-  width: 100%;
-  border-top: 1px solid #d1d5db;
-}
-
-.dividerText {
-  position: relative;
-  display: flex;
-  justify-content: center;
-  font-size: 0.875rem;
-}
-
-.dividerTextSpan {
-  padding: 0 0.5rem;
-  background-color: white;
-  color: #6b7280;
-}
-
-.socialButtons {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 0.75rem;
-  margin-top: 1.5rem;
-}
-
-.socialButton {
-  width: 100%;
-  padding: 0.75rem 1rem;
-  background-color: transparent;
-  border: 1px solid #d1d5db;
-  border-radius: 0.375rem;
-  font-size: 0.875rem;
-  font-weight: 500;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  transition: background-color 0.2s, border-color 0.2s;
-}
-
-.socialButton:hover {
-  background-color: #f9fafb;
-  border-color: #9ca3af;
-}
-
-.socialIcon {
-  width: 1rem;
-  height: 1rem;
-}
-
-@media (max-width: 640px) {
-  .container {
-    padding: 1rem;
-  }
-
-  .cardContent {
-    padding: 1rem;
-  }
-
-  .socialButtons {
-    grid-template-columns: 1fr;
-  }
-} */
-/* Redesigned login page with dark theme, gradient background and glassmorphism */
-.container {
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%);
   background-attachment: fixed;
   padding: 2rem 1rem;
@@ -759,5 +429,330 @@
 
   .cardTitle {
     font-size: 1.5rem;
+  }
+} */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+/* --- Container & Background --- */
+.container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* Nền Gradient sáng hiện đại */
+  background: radial-gradient(at 0% 0%, hsla(253,16%,7%,1) 0, transparent 50%), 
+              radial-gradient(at 50% 0%, hsla(225,39%,30%,1) 0, transparent 50%), 
+              radial-gradient(at 100% 0%, rgb(51, 138, 232) 0, transparent 50%);
+              /* radial-gradient(at 100% 0%, hsla(339,49%,30%,1) 0, transparent 50%); */
+  background-color: #f8fafc; /* Fallback màu sáng */
+  background-image: 
+    radial-gradient(at 40% 20%, rgb(160, 201, 242) 0px, transparent 50%),
+    radial-gradient(at 80% 0%, hsla(189, 100%, 86%, 1) 0px, transparent 50%),
+    /* radial-gradient(at 0% 50%, rgb(212, 204, 255) 0px, transparent 50%); */
+    radial-gradient(at 0% 50%, rgb(168, 201, 225) 0px, transparent 50%);
+  padding: 1.5rem;
+}
+
+/* --- Card (Main Box) --- */
+.card {
+  width: 100%;
+  max-width: 480px; /* Rộng hơn một chút để thoáng */
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-radius: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  box-shadow: 
+    0 4px 6px -1px rgba(0, 0, 0, 0.05), 
+    0 10px 15px -3px rgba(0, 0, 0, 0.05),
+    0 20px 40px rgba(0, 0, 0, 0.04);
+  overflow: hidden;
+  animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.cardHeader {
+  padding: 2.5rem 2rem 1rem;
+  text-align: center;
+}
+
+.cardTitle {
+  font-size: 1.875rem;
+  font-weight: 800;
+  color: #1e293b;
+  margin-bottom: 0.5rem;
+  letter-spacing: -0.025em;
+}
+
+.cardDescription {
+  color: #64748b;
+  font-size: 0.95rem;
+}
+
+.cardContent {
+  padding: 0 2rem 2.5rem;
+}
+
+/* --- Tabs --- */
+.tabsList {
+  display: flex;
+  background: #f1f5f9;
+  border-radius: 12px;
+  padding: 4px;
+  margin-bottom: 2rem;
+  position: relative;
+}
+
+.tabsTrigger {
+  flex: 1;
+  border: none;
+  background: transparent;
+  padding: 10px;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #64748b;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.tabsTrigger:hover {
+  color: #334155;
+}
+
+.tabsTrigger.active {
+  background: #ffffff;
+  color: #4f46e5; /* Màu Indigo chủ đạo */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+/* --- Form Elements --- */
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #334155;
+}
+
+.inputWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input {
+  width: 100%;
+  padding: 12px 16px;
+  padding-left: 44px; /* Chừa chỗ cho icon */
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  font-size: 0.95rem;
+  color: #1e293b;
+  transition: all 0.2s ease;
+}
+
+.inputWithToggle {
+  padding-right: 44px;
+}
+
+.input:focus {
+  outline: none;
+  background: #fff;
+  border-color: #6366f1;
+  box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+}
+
+.input::placeholder {
+  color: #94a3b8;
+}
+
+.inputIcon {
+  position: absolute;
+  left: 14px;
+  width: 20px;
+  height: 20px;
+  color: #94a3b8;
+  pointer-events: none;
+  transition: color 0.2s;
+}
+
+.input:focus ~ .inputIcon {
+  color: #6366f1;
+}
+
+.toggleButton {
+  position: absolute;
+  right: 14px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #94a3b8;
+  display: flex;
+  padding: 0;
+}
+
+.toggleButton:hover {
+  color: #475569;
+}
+
+/* --- Actions (Checkbox, Forgot Password) --- */
+.rememberRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: -0.25rem;
+}
+
+.checkboxGroup {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.checkbox {
+  width: 16px;
+  height: 16px;
+  border-radius: 4px;
+  border: 1px solid #cbd5e1;
+  accent-color: #6366f1;
+  cursor: pointer;
+}
+
+.checkboxLabel {
+  font-size: 0.875rem;
+  color: #475569;
+}
+
+.forgotLink {
+  background: none;
+  border: none;
+  color: #6366f1;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.forgotLink:hover {
+  color: #4338ca;
+  text-decoration: underline;
+}
+
+/* --- Submit Button --- */
+.button {
+  width: 100%;
+  padding: 14px;
+  /* background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%); */
+  background:linear-gradient(135deg, #909fe1 0%, #16d0f5 100%);
+
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+  margin-top: 0.5rem;
+}
+
+.button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 16px rgba(99, 102, 241, 0.4);
+}
+
+.button:active {
+  transform: translateY(0);
+}
+
+/* --- Terms --- */
+.termsGroup {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.termsLabel {
+  font-size: 0.85rem;
+  color: #64748b;
+  line-height: 1.4;
+}
+
+.termsLink {
+  color: #6366f1;
+  font-weight: 600;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+/* --- Divider --- */
+.divider {
+  margin: 2rem 0;
+  position: relative;
+  text-align: center;
+}
+
+.dividerLine {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: #e2e8f0;
+}
+
+.dividerText {
+  position: relative;
+  display: inline-block;
+  background: #fff; /* Phải trùng màu nền card */
+  padding: 0 1rem;
+  color: #94a3b8;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+/* --- Responsive --- */
+@media (max-width: 640px) {
+  .container {
+    padding: 1rem;
+    align-items: flex-start; /* Tránh bị cắt trên mobile thấp */
+  }
+  
+  .card {
+    margin-top: 1rem;
+  }
+
+  .cardTitle {
+    font-size: 1.5rem;
+  }
+  
+  .cardContent {
+    padding: 1.5rem;
   }
 }

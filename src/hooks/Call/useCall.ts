@@ -47,34 +47,6 @@ export function useCall(myId: string) {
     socket.emit("call-offer", { offer, targetId, from: myId });
   };
 
-  // ------------------ CREATE PEER ------------------
-  //   const createPeer = (targetId: string) => {
-  //     // const pc = new RTCPeerConnection({
-  //     //   iceServers: [{ urls: "stun:stun.l.google.com:19302" }],
-  //     // });
-  //     const res = await api.get("/webRtc");
-
-  //     const pc = new RTCPeerConnection({
-  //       iceServers: res.data.iceServers,
-  //     });
-  //     pc.onicecandidate = (e) => {
-  //       if (e.candidate) {
-  //         socket.emit("ice-candidate", {
-  //           targetId,
-  //           from: myId,
-  //           candidate: e.candidate,
-  //         });
-  //       }
-  //     };
-
-  //     pc.ontrack = (e) => {
-  //       if (remoteVideoRef.current) {
-  //         remoteVideoRef.current.srcObject = e.streams[0];
-  //       }
-  //     };
-
-  //     return pc;
-  //   };
   const createPeer = (targetId: string, iceServers: any[]) => {
     const pc = new RTCPeerConnection({ iceServers });
 
@@ -97,30 +69,6 @@ export function useCall(myId: string) {
     return pc;
   };
 
-  // ------------------ ACCEPT CALL ------------------
-  //   const acceptCall = async () => {
-  //     const { from, offer } = incomingCall;
-  //     setInCall(true);
-
-  //     const stream = await navigator.mediaDevices.getUserMedia({
-  //       video: true,
-  //       audio: true,
-  //     });
-  //     localStreamRef.current = stream;
-  //     if (localVideoRef.current) localVideoRef.current.srcObject = stream;
-
-  //     const pc = createPeer(from);
-  //     peerRef.current = pc;
-
-  //     stream.getTracks().forEach((track) => pc.addTrack(track, stream));
-
-  //     await pc.setRemoteDescription(new RTCSessionDescription(offer));
-  //     const answer = await pc.createAnswer();
-  //     await pc.setLocalDescription(answer);
-
-  //     socket.emit("call-answer", { answer, targetId: from, from: myId });
-  //     setIncomingCall(null);
-  //   };
   const acceptCall = async () => {
     const { from, offer } = incomingCall;
     setInCall(true);

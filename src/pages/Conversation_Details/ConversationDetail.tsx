@@ -39,6 +39,8 @@ import {
 } from "../../hooks/auth/Conversation/constants";
 import { getToken } from "../../Utils/getToken";
 import { useCall } from "../../hooks/Call/useCall";
+import { SEARCH_USER } from "../../hooks/auth/user/constant";
+import AddMemberModal from "./SearchUser";
 
 export default function ConversationDetail({
   chatType,
@@ -48,6 +50,7 @@ export default function ConversationDetail({
   /** ---------------- STATE ---------------- */
   const [currentConversation, setCurrentConversation] =
     useState<Conversation>();
+    console.log(currentConversation?.participants)
   const [messages, setMessages] = useState<Message[]>([]);
   const [lastReadAt, setLastReadAt] = useState<string>();
   const [showSidebar, setShowSidebar] = useState(false);
@@ -79,7 +82,11 @@ export default function ConversationDetail({
   const { onlineUsers, setOnlineUsers } = useOnlineUsers(token);
   const { sendMessage } = useSendMessage(token);
   const [isAddingMember, setIsAddingMember] = useState(false);
-  const [newMemberId, setNewMemberId] = useState("");
+  // const [newMemberId, setNewMemberId] = useState("");
+
+  const [searchKeyword, setSearchKeyword] = useState("");
+  const [searchResults, setSearchResults] = useState<any[]>([]);
+  const [isSearching, setIsSearching] = useState(false);
 
   useJoinConversation(conversationId);
   useUserStatusEvents(setOnlineUsers);
@@ -163,22 +170,21 @@ export default function ConversationDetail({
   };
 
   // Thêm người vào nhóm
-  const handleAddMember = async () => {
-    if (!currentConversation?._id || !newMemberId) return;
+  const handleAddMember = async (userId: string) => {
+    if (!currentConversation?._id) return;
     try {
       await api.post(`${ADD_MEMBER}/${currentConversation._id}/member`, {
-        userIds: [newMemberId],
+        userIds: [userId],
       });
       toast.success("Đã thêm thành viên!");
-      setNewMemberId("");
-      setIsAddingMember(false);
+
+      setSearchKeyword("");
+      setSearchResults([]);
     } catch (err) {
       console.error(err);
       toast.error("Không thể thêm người, vui lòng thử lại!");
     }
   };
-
-  // Xóa thành viên khỏi nhóm
   const handleRemoveMember = async (userId: string) => {
     if (!currentConversation?._id) return;
 
@@ -207,6 +213,37 @@ export default function ConversationDetail({
       },
     });
     setShowConfirmModal(true);
+  };
+  const handleSearchMember = async () => {
+    if (!searchKeyword.trim()) {
+      toast.info("Vui lòng nhập từ khoá!");
+      return;
+    }
+    try {
+      setIsSearching(true);
+      const token = getToken();
+      const res = await api.get(`${SEARCH_USER}?keyword=${searchKeyword}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setSearchResults(res.data.data || []);
+    } catch (err) {
+      console.error(err);
+      toast.error("Không thể thêm người, vui lòng thử lại!");
+    } finally {
+      setIsSearching(false);
+    }
+  };
+  const handleSelectUser = async (userId: string) => {
+    try {
+      await handleAddMember(userId); // hàm add member cũ của bạn
+      toast.success("Đã thêm thành viên!");
+      setSearchResults([]); // xoá list kết quả
+      setSearchKeyword(""); // clear input
+    } catch (err) {
+      toast.error("Không thể thêm người này!");
+    }
   };
 
   const confirmRemoveMember = async () => {
@@ -297,8 +334,6 @@ export default function ConversationDetail({
         console.log(
           `[Realtime] Department updated for this conversation: ${oldDepartment} → ${newDepartment}`
         );
-
-        // ✅ Cập nhật ngay bộ phận trong state
         setCurrentConversation((prev) =>
           prev ? { ...prev, assignedDepartment: newDepartment } : prev
         );
@@ -387,7 +422,7 @@ export default function ConversationDetail({
 
   const renderHeaderAvatar = () => {
     if (!currentConversation) return null;
-    if (currentConversation.type === "private") {
+    if (currentConversation.type === "group") {
       const otherUser = currentConversation.participants.find(
         (p) => p._id !== myId
       );
@@ -609,24 +644,11 @@ export default function ConversationDetail({
               </ul>
 
               {isAddingMember ? (
-                <div className="add-member-form">
-                  <input
-                    type="text"
-                    value={newMemberId}
-                    onChange={(e) => setNewMemberId(e.target.value)}
-                    placeholder="Nhập ID thành viên..."
-                    className="input-member"
-                  />
-                  <button onClick={handleAddMember} className="add-btn">
-                    Thêm
-                  </button>
-                  <button
-                    onClick={() => setIsAddingMember(false)}
-                    className="cancel-btn"
-                  >
-                    Hủy
-                  </button>
-                </div>
+                <AddMemberModal
+                conversationId={currentConversation?._id}
+                members={currentConversation?.participants || []}
+                  onClose={() => setIsAddingMember(false)}
+                />
               ) : (
                 <button
                   className="add-member-toggle"
@@ -670,13 +692,6 @@ export default function ConversationDetail({
                     ?.username
                 : currentConversation?.name}
             </h3>
-            {/* <p className="chat-user-status">
-                            {currentConversation?.type === "private"
-                                ? renderStatus(
-                                    currentConversation.participants.find((p) => p._id !== myId)?._id || ""
-                                )
-                                : "Nhóm"}
-                        </p> */}
             {currentConversation?.assignedDepartment && (
               <div className="department-header">
                 <span> Bộ phận: </span>

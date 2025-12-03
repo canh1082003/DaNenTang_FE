@@ -14,14 +14,11 @@ export default function AuthForm() {
     const [showConfirmPassword, setShowConfirmPassword] = useState(false)
     const [loginData, setLoginData] = useState<FormData>({ email: "", password: "" })
     const [registerData, setRegisterData] = useState<FormData>({
+        username: "",
         email: "",
         password: "",
         confirmPassword: "",
-        username: "",
     })
-
-
-
     const handleLoginSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
         await api.post(LOGIN_URL, {
@@ -35,7 +32,8 @@ export default function AuthForm() {
         await api.post(REGISTER_URL, {
             username: registerData.username,
             email: registerData.email,
-            password: registerData.password
+            password: registerData.password,
+            confirmPassword: registerData.confirmPassword
         })
     }
 
@@ -43,13 +41,13 @@ export default function AuthForm() {
         <div className="container">
             <div className="card">
                 <div className="cardHeader">
-                    <h1 className="cardTitle">Chào mừng bạn</h1>
-                    <p className="cardDescription">Đăng nhập hoặc tạo tài khoản mới</p>
+                    <h1 className="cardTitle">Đăng Nhập</h1>
+                    <p className="cardDescription">Chào mừng bạn đến với ChatBox Đa Nền Tảng</p>
                 </div>
 
                 <div className="cardContent">
                     <div className="tabs">
-                        <div className="tabsList">
+                        {/* <div className="tabsList">
                             <button
                                 className={`tabsTrigger ${activeTab === "login" ? activeTab : ""}`}
                                 onClick={() => setActiveTab("login")}
@@ -62,7 +60,7 @@ export default function AuthForm() {
                             >
                                 Đăng ký
                             </button>
-                        </div>
+                        </div> */}
 
                         {activeTab === "login" && (
                             <div className="tabsContent">
@@ -195,7 +193,7 @@ export default function AuthForm() {
                                             <Lock className="inputIcon" />
                                             <input
                                                 id="register-confirm-password"
-                                                type={showConfirmPassword ? "text" : "password"}
+                                                type={showConfirmPassword ? "text" : "confirmPassword"}
                                                 placeholder="••••••••"
                                                 className="input inputWithIcon inputWithToggle"
                                                 value={registerData.confirmPassword}
@@ -229,14 +227,14 @@ export default function AuthForm() {
                         )}
                     </div >
 
-                    <div className="divider">
+                    {/* <div className="divider">
                         <div className="dividerLine">
                             <div className="dividerBorder" />
                         </div>
                         <div className="dividerText">
                             <span className="dividerTextSpan">Hoặc tiếp tục với</span>
                         </div>
-                    </div>
+                    </div> */}
 
 
                 </div >

@@ -1,10 +1,20 @@
 import { useEffect, useState } from "react";
-import { Conversations, IPlatform, IRecentConversationsResponse } from "../../../pages/admin/Dashboard/type";
-import { PLATFORMS_API, RECENTCONVERSATIONS_API, TOTALCONVERSATIONS_API } from "./constants";
+import {
+  Conversations,
+  IPlatform,
+  IRecentConversationsResponse,
+} from "../../../pages/admin/Dashboard/type";
+import {
+  PLATFORMS_API,
+  RECENTCONVERSATIONS_API,
+  TOTALCONVERSATIONS_API,
+} from "./constants";
 import api from "../../../API/API";
+import { getToken } from "../../../Utils/getToken";
 
 export const useTotalConversations = () => {
-  const [totalConversations, setTotalConversations] = useState<Conversations | null>(null);
+  const [totalConversations, setTotalConversations] =
+    useState<Conversations | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -28,9 +38,10 @@ export const useTotalConversations = () => {
 
   return { totalConversations, loading, error };
 };
-export const useRecentConversations=() => {
-  const [recentConversations, setRecentConversations] = useState<IRecentConversationsResponse | null>(null);
-  console.log(recentConversations)
+export const useRecentConversations = () => {
+  const [recentConversations, setRecentConversations] =
+    useState<IRecentConversationsResponse | null>(null);
+  console.log(recentConversations);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -53,7 +64,7 @@ export const useRecentConversations=() => {
   }, []);
 
   return { recentConversations, loading, error };
-}
+};
 export const usePlatforms = () => {
   const [platforms, setPlatforms] = useState<IPlatform[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -63,7 +74,13 @@ export const usePlatforms = () => {
     const fetchPlatforms = async () => {
       try {
         setLoading(true);
-        const res = await api.get(PLATFORMS_API);
+        const token = getToken();
+        const config = {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        };
+        const res = await api.get(PLATFORMS_API, config);
         const data: IPlatform[] = res.data.data;
         setPlatforms(data);
       } catch (err: any) {

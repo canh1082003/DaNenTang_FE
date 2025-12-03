@@ -16,21 +16,6 @@ export default function Platforms() {
   const [showModal, setShowModal] = useState(false);
   const [newPlatform, setNewPlatform] = useState({ name: "", apiKey: "" });
 
-  //   if (!newPlatform.name || !newPlatform.apiKey) return;
-
-  //   try {
-  //     setLoading(true);
-  //     await connectPlatform(newPlatform.name, newPlatform.apiKey);
-
-  //     // Không cần setPlatforms — socket sẽ emit platform-status khi BE xong
-  //     setNewPlatform({ name: "", apiKey: "" });
-  //     setShowModal(false);
-  //   } catch (err) {
-  //     console.error("❌ Lỗi khi thêm platform:", err);
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
   const handleAddPlatform = async () => {
     if (!newPlatform.name || !newPlatform.apiKey) return;
     try {
@@ -88,8 +73,6 @@ export default function Platforms() {
       } else {
         await connectPlatform(platformName, id);
       }
-
-      // ✅ Refetch lại danh sách từ DB
       await refetch();
 
     } catch (err) {

@@ -22,7 +22,6 @@ export default function ChatBox() {
   const userInfo = localStorage.getItem("userInfo");
   const token = userInfo ? JSON.parse(userInfo).token : null;
   const navigate = useNavigate();
-  // const currentUserId = userInfo ? JSON.parse(userInfo).id : null;
   const handleClickConversation = async (id: string) => {
     const token = getToken();
     const res = await api.get(
@@ -68,7 +67,6 @@ export default function ChatBox() {
 
     let filtered = conversationsAll;
 
-    // 🧩 Lọc theo loại chat
     if (chatType === "staff") {
       filtered = filtered
     .filter((conversation) => conversation.type === "private")

@@ -1,12 +1,12 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import "./403.css"; // import file css thuần
+import "./403.css";
 
 const Forbidden403: React.FC = () => {
   const navigate = useNavigate();
 
   const handleBack = () => {
-    navigate("/"); // quay lại trang chủ
+    navigate("/");
   };
 
   return (

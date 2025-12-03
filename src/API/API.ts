@@ -8,6 +8,7 @@ import {
 import { ApiSuccessResponse } from "../hooks/type.ts";
 import { LoginData, RegisterData } from "../hooks/auth/user/type.ts";
 import { toast } from "react-toastify";
+
 export class Api {
   instance: AxiosInstance;
   constructor() {
@@ -26,13 +27,12 @@ export class Api {
             const registerResponse =
               response as ApiSuccessResponse<RegisterData>;
             const email = registerResponse.data.data.email;
-            if (email) {
-              toast.success("Register Success");
-              setTimeout(() => {
-                window.location.href = "/login";
-              }, 200);
-            }
-
+            toast.success("Register Success");
+            // if (email) {
+            //   setTimeout(() => {
+            //     window.location.href = `/verify-email/${email}`;
+            //   }, 200);
+            // }
             return response;
           }
 
@@ -72,13 +72,12 @@ export class Api {
         const errorStatus = error.response?.status;
         console.log(errorData);
         if (errorStatus === 403) {
-                window.location.href = "/403";
-            
+          window.location.href = "/403";
         }
         if (errorStatus === 401) {
           window.location.href = "/login";
         }
-        const errorMessage = errorData?.message || "Đã xảy ra lỗi";
+        const errorMessage = errorData.errors[0]?.errorMessage || "Đã xảy ra lỗi";
         toast.error(errorMessage);
       }
     );
