@@ -109,7 +109,7 @@ body {
 
 /* --- 3. Hero Section (Phần chữ to) --- */
 .hero-section {
-  padding: 140px 20px 80px;
+  padding: 60px 20px 10px;
   text-align: center;
   position: relative;
 }
@@ -140,7 +140,7 @@ body {
   font-size: 20px;
   color: var(--text-secondary); /* Xám nhạt dễ đọc trên nền đen */
   max-width: 640px;
-  margin: 0 auto 48px;
+  margin: 0 auto 28px;
   font-weight: 400;
 }
 

@@ -33,7 +33,7 @@ export const useConversations = (period: "all" | "week" | "month") => {
     };
 
     fetchConversations();
-  }, [period]); // ⚠️ re-run khi period thay đổi
+  }, [period]);
 
   return { conversations, loading, error };
 };

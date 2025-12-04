@@ -74,7 +74,6 @@ export const useSendMessage = (token: string | null) => {
           },
         });
       } else {
-        // 🧩 Nếu chỉ gửi text (JSON)
         res = await api.post(
           `${SEND_MESSAGE}`,
           {
