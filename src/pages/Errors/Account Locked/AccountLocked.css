@@ -1,0 +1,77 @@
+/* Background */
+.locked-bg {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #ffe2e2, #ffffff, #ffd6d6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  animation: fadeIn 0.5s ease-out;
+}
+
+/* Card */
+.error-card {
+  background: white;
+  padding: 40px;
+  width: 420px;
+  text-align: center;
+  border-radius: 20px;
+  border: 1px solid #ffc2c2;
+  box-shadow: 0 10px 25px rgba(255, 35, 35, 0.15);
+}
+
+/* Icon */
+.error-icon {
+  font-size: 64px;
+  margin-bottom: 15px;
+}
+
+/* Title */
+.error-title {
+  font-size: 28px;
+  font-weight: bold;
+  margin-bottom: 15px;
+}
+
+.locked-color {
+  color: #d64545;
+}
+
+/* Text */
+.error-text {
+  color: #555;
+  margin-bottom: 25px;
+  font-size: 16px;
+}
+
+/* Button */
+.error-btn {
+  display: inline-block;
+  padding: 12px 25px;
+  border-radius: 12px;
+  font-size: 16px;
+  color: white;
+  font-weight: 500;
+  transition: all 0.2s ease-in-out;
+}
+
+.locked-btn {
+  background: #d64545;
+  box-shadow: 0 6px 15px rgba(214, 69, 69, 0.3);
+}
+
+.locked-btn:hover {
+  background: #bb3030;
+  box-shadow: 0 8px 18px rgba(214, 69, 69, 0.4);
+}
+
+/* Fade-in Animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

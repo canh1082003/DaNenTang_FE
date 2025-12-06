@@ -1,0 +1,69 @@
+.request-bg {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #fff5cc, #ffffff, #ffeaa7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  animation: fadeIn 0.5s ease-out;
+}
+
+.error-card {
+  background: white;
+  padding: 40px;
+  width: 420px;
+  text-align: center;
+  border-radius: 20px;
+  border: 1px solid #ffe08a;
+  box-shadow: 0 10px 25px rgba(255, 193, 7, 0.25);
+}
+
+.error-icon {
+  font-size: 64px;
+  margin-bottom: 15px;
+}
+
+.error-title {
+  font-size: 28px;
+  font-weight: bold;
+  margin-bottom: 15px;
+}
+
+.request-color {
+  color: #d68910;
+}
+
+.error-text {
+  color: #555;
+  margin-bottom: 25px;
+  font-size: 16px;
+}
+
+.error-btn {
+  display: inline-block;
+  padding: 12px 25px;
+  border-radius: 12px;
+  font-size: 16px;
+  color: white;
+  font-weight: 500;
+  transition: all 0.2s ease-in-out;
+}
+
+.request-btn {
+  background: #f1c40f;
+  box-shadow: 0 6px 15px rgba(241, 196, 15, 0.4);
+}
+
+.request-btn:hover {
+  background: #d4ac0d;
+  box-shadow: 0 8px 18px rgba(241, 196, 15, 0.5);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+  }
+}

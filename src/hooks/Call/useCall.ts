@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import socket from "../../Utils/socket";
+import { getSocket } from "../../Utils/socket";
 import api from "../../API/API";
 import { GET_USER, WEBRTC } from "./constants";
 import { getToken } from "../../Utils/getToken";
@@ -13,7 +13,7 @@ export function useCall(myId: string) {
 
   const peerRef = useRef<RTCPeerConnection | null>(null);
   const localStreamRef = useRef<MediaStream | null>(null);
-
+  const socket= getSocket();
   // ------------------ START CALL ------------------
   const startCall = async (targetId: string) => {
     setInCall(true);
@@ -44,7 +44,7 @@ export function useCall(myId: string) {
     await pc.setLocalDescription(offer);
 
     // Send offer to target
-    socket.emit("call-offer", { offer, targetId, from: myId });
+    socket?.emit("call-offer", { offer, targetId, from: myId });
   };
 
   const createPeer = (targetId: string, iceServers: any[]) => {
@@ -52,7 +52,7 @@ export function useCall(myId: string) {
 
     pc.onicecandidate = (e) => {
       if (e.candidate) {
-        socket.emit("ice-candidate", {
+        socket?.emit("ice-candidate", {
           targetId,
           from: myId,
           candidate: e.candidate,
@@ -99,14 +99,14 @@ export function useCall(myId: string) {
     const answer = await pc.createAnswer();
     await pc.setLocalDescription(answer);
 
-    socket.emit("call-answer", { answer, targetId: from, from: myId });
+    socket?.emit("call-answer", { answer, targetId: from, from: myId });
 
     setIncomingCall(null);
   };
 
   // ------------------ DECLINE CALL ------------------
   const declineCall = () => {
-    socket.emit("call-reject", { targetId: incomingCall.from });
+    socket?.emit("call-reject", { targetId: incomingCall.from });
     setIncomingCall(null);
   };
 
@@ -120,12 +120,12 @@ export function useCall(myId: string) {
     setInCall(false);
     setIncomingCall(null);
 
-    socket.emit("call-end", { targetId: incomingCall?.from || "" });
+    socket?.emit("call-end", { targetId: incomingCall?.from || "" });
   };
 
   // ------------------ SOCKET HANDLERS ------------------
   useEffect(() => {
-    socket.on("call-offer", async ({ from, offer }) => {
+    socket?.on("call-offer", async ({ from, offer }) => {
         console.log(from)
       const userRes = await api.get(`${GET_USER}${from}`);
       const user = userRes?.data?.data;
@@ -137,13 +137,13 @@ export function useCall(myId: string) {
       });
     });
 
-    socket.on("call-answer", async ({ answer }) => {
+    socket?.on("call-answer", async ({ answer }) => {
       await peerRef.current?.setRemoteDescription(
         new RTCSessionDescription(answer)
       );
     });
 
-    socket.on("ice-candidate", async ({ candidate }) => {
+    socket?.on("ice-candidate", async ({ candidate }) => {
       try {
         await peerRef.current?.addIceCandidate(new RTCIceCandidate(candidate));
       } catch (e) {
@@ -151,15 +151,15 @@ export function useCall(myId: string) {
       }
     });
 
-    socket.on("call-end", () => {
+    socket?.on("call-end", () => {
       endCall();
     });
 
     return () => {
-      socket.off("call-offer");
-      socket.off("call-answer");
-      socket.off("ice-candidate");
-      socket.off("call-end");
+      socket?.off("call-offer");
+      socket?.off("call-answer");
+      socket?.off("ice-candidate");
+      socket?.off("call-end");
     };
   }, []);
 

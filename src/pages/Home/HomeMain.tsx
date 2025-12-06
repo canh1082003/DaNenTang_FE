@@ -62,7 +62,7 @@ useEffect(() => {
             Giải pháp giao tiếp Unified Communication bảo mật và tốc độ cao.
           </p>
           <div className="hero-buttons">
-            <Link to="/login" className="hero-primary-button">
+            <Link to="/ChatBox" className="hero-primary-button">
               Dùng ngay
             </Link>
             {/* <button className="hero-secondary-button">

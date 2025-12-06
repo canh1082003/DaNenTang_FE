@@ -74,8 +74,22 @@ export class Api {
         if (errorStatus === 403) {
           window.location.href = "/403";
         }
+        if (errorStatus === 423) {
+          window.location.href = "/account-locked";
+          return;
+        }
+
+        if (errorStatus === 429) {
+          window.location.href = "/too-many-requests";
+          return;
+        }
+
+        if (errorStatus === 503) {
+          window.location.href = "/server-overload";
+          return;
+        }
         if (errorStatus === 401) {
-          window.location.href = "/login";
+          // window.location.href = "/login";
         }
         const errorMessage = errorData.errors[0]?.errorMessage || "Đã xảy ra lỗi";
         toast.error(errorMessage);

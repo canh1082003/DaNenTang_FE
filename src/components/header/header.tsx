@@ -5,7 +5,6 @@ import { Link } from 'react-router-dom';
 export default function Header() {
     const userInfo = localStorage.getItem("userInfo");
     const user = userInfo ? JSON.parse(userInfo) : null;
-    console.log(user)
     return (
          <header className="home-header">
         <div className="header-container">

@@ -14,7 +14,7 @@ import Settings from "../pages/admin/Settings/Settings.tsx";
 import Platforms from "../pages/admin/Platforms/platforms.tsx";
 import Reports from "../pages/admin/Reports/Reports.tsx";
 import AdminRoute from "../components/Admin/AdminRouter.tsx";
-import Forbidden403 from "../pages/403/403.tsx";
+import Forbidden403 from "../pages/Errors/403/403.tsx";
 import ConversationDetail from "../pages/Conversation_Details/ConversationDetail.tsx";
 import VerifyEmail from "../pages/auth-form/ verifyEmail.tsx";
 import UserProfile from "../pages/InfoStaff/infoStaff.tsx";
@@ -22,12 +22,23 @@ import StaffPage from "../pages/admin/Dashboard_Staff/DashBoard_Staff.tsx";
 import FeaturesPage from "../pages/Home/FeaturesPage.tsx";
 import PlatformsPage from "../pages/Home/PlatformsPage.tsx";
 import PricingPage from "../pages/Home/PricingPage.tsx";
+import PrivateRoute from "../components/PrivateRoute/PrivateRoute.tsx";
+import AccountLocked from "../pages/Errors/Account Locked/AccountLocked.tsx";
+import TooManyRequests from "../pages/Errors/Too Many Requests/TooManyRequests.tsx";
+import ServerOverload from "../pages/Errors/Server Overload/ServerOverload.tsx";
 
 export const AppRoutes = () => {
   return (
     <Routes>
       <Route path="/" element={<MainLayout />}>
-      <Route path="/ChatBox" element={<ChatBox />} />
+      <Route
+  path="/ChatBox"
+  element={
+    <PrivateRoute>
+      <ChatBox />
+    </PrivateRoute>
+  }
+/>
             <Route index element={<HomeMain />} />
             <Route path="/features" element={<FeaturesPage />} />
             <Route path="/platforms" element={<PlatformsPage />} />
@@ -58,6 +69,9 @@ export const AppRoutes = () => {
       </Route>
       </Route>
       <Route path="/403" element={<Forbidden403 />} />
+       <Route path="/account-locked" element={<AccountLocked />} />
+  <Route path="/too-many-requests" element={<TooManyRequests />} />
+  <Route path="/server-overload" element={<ServerOverload />} />
     </Routes>
   );
 };

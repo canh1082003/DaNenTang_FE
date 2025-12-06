@@ -5,7 +5,7 @@ import "../Chatbox/Chatbox.css";
 import { Conversation } from "./type";
 import { ALL_CONVERSATIONS } from "../../hooks/auth/chat/constants";
 import api from "../../API/API";
-import socket from "../../Utils/socket";
+import { getSocket } from "../../Utils/socket";
 import { timeAgo } from "../../Utils/formatDate";
 import ConversationDetail from "../Conversation_Details/ConversationDetail";
 import { useNavigate } from "react-router-dom";
@@ -39,7 +39,7 @@ export default function ChatBox() {
   };
   const [chatType, setChatType] = useState<"customer" | "staff">("customer");
   const [now, setNow] = useState(Date.now());
-
+  const socket = getSocket();
   useEffect(() => {
     const i = setInterval(() => setNow(Date.now()), 30000);
     return () => clearInterval(i);
@@ -244,7 +244,7 @@ export default function ChatBox() {
     };
   }, []);
   useEffect(() => {
-    socket.on(
+    socket?.on(
       "departmentUpdated",
       ({ conversationId, oldDepartment, newDepartment }) => {
         console.log(
@@ -263,7 +263,7 @@ export default function ChatBox() {
 
     // cleanup listener khi component unmount
     return () => {
-      socket.off("departmentUpdated");
+      socket?.off("departmentUpdated");
     };
   }, []);
 
@@ -304,9 +304,9 @@ export default function ChatBox() {
     const handleNewMessagePreview = (message: any) => {
       updateConversationPreview(message);
     };
-    socket.on("newMessagePreview", handleNewMessagePreview);
+    socket?.on("newMessagePreview", handleNewMessagePreview);
     return () => {
-      socket.off("newMessagePreview", handleNewMessagePreview);
+      socket?.off("newMessagePreview", handleNewMessagePreview);
     };
   }, []);
 

@@ -1,11 +1,12 @@
 import { useEffect } from "react";
-import socket from "../../Utils/socket";
+import { getSocket } from "../../Utils/socket";
 
 export const useJoinConversation = (conversationId?: string) => {
   useEffect(() => {
     if (conversationId) {
-      socket.emit("joinRoom", conversationId);
-      socket.emit("markAsRead", conversationId);
+      const socket = getSocket();
+      socket?.emit("joinRoom", conversationId);
+      socket?.emit("markAsRead", conversationId);
     }
   }, [conversationId]);
 };

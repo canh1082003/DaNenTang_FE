@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import socket from "../../Utils/socket";
+import { getSocket } from "../../Utils/socket";
 import { Message } from "../../pages/Chatbox/type";
 
 export const useSocketMessages = (
@@ -11,12 +11,13 @@ export const useSocketMessages = (
   setLastReadAt: React.Dispatch<React.SetStateAction<string | undefined>>
 ) => {
   useEffect(() => {
+    const socket= getSocket();
     const handleNewMessage = (message: Message) => {
       if (message.conversation === conversationId) {
         const shouldStick = isNearBottom();
         setMessages((prev) => [...prev, message]);
         if (shouldStick) setTimeout(scrollToBottom, 0);
-        socket.emit("markAsRead", conversationId);
+        socket?.emit("markAsRead", conversationId);
       }
     };
 
@@ -33,12 +34,12 @@ export const useSocketMessages = (
       }
     };
 
-    socket.on("newMessage", handleNewMessage);
-    socket.on("readReceipt", handleReadReceipt);
+    socket?.on("newMessage", handleNewMessage);
+    socket?.on("readReceipt", handleReadReceipt);
 
     return () => {
-      socket.off("newMessage", handleNewMessage);
-      socket.off("readReceipt", handleReadReceipt);
+      socket?.off("newMessage", handleNewMessage);
+      socket?.off("readReceipt", handleReadReceipt);
     };
   }, [
     conversationId,
