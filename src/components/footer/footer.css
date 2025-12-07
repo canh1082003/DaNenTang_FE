@@ -1,0 +1,87 @@
+/* =============================
+   Footer Main
+============================= */
+.footer_main {
+  width: 100%;
+  background: #0A0F1C;
+  color: #d1d5db;
+  padding: 50px 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* =============================
+   Container
+============================= */
+.footer_main .footer-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 40px;
+}
+
+/* =============================
+   Footer Section
+============================= */
+.footer_main .footer-container .footer-section {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Logo */
+.footer_main .footer-container .footer-section .footer-logo {
+  font-size: 28px;
+  font-weight: bold;
+  color: #ffffff;
+  margin-bottom: 12px;
+}
+
+/* Title */
+.footer_main .footer-container .footer-section .footer-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #ffffff;
+  margin-bottom: 12px;
+  border-left: 4px solid #6366F1;
+  padding-left: 10px;
+}
+
+/* Text */
+.footer_main .footer-container .footer-section .footer-text {
+  color: #b0b5c1;
+  margin-bottom: 8px;
+  line-height: 1.6;
+}
+
+/* =============================
+   Footer Links
+============================= */
+.footer_main .footer-container .footer-section .footer-links {
+  list-style: none;
+  padding: 0;
+}
+
+.footer_main .footer-container .footer-section .footer-links li {
+  margin-bottom: 10px;
+}
+
+.footer_main .footer-container .footer-section .footer-links a {
+  color: #b0b5c1;
+  text-decoration: none;
+  transition: 0.25s;
+}
+
+.footer_main .footer-container .footer-section .footer-links a:hover {
+  color: #ffffff;
+}
+
+/* =============================
+   Footer Bottom
+============================= */
+.footer_main .footer-bottom {
+  text-align: center;
+  padding-top: 20px;
+  font-size: 14px;
+  color: #8b93a1;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}

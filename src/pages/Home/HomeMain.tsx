@@ -213,10 +213,6 @@ useEffect(() => {
           </div>
         </div>
       </section>
-
-      <footer style={{textAlign: 'center', padding: '40px', color: '#52525b', borderTop: '1px solid rgba(255,255,255,0.05)'}}>
-        <p>© 2025 MultiChat Inc. All rights reserved.</p>
-      </footer>
     </main>
   );
 }

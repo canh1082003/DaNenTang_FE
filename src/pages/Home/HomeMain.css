@@ -248,7 +248,7 @@ body {
 
 /* --- 5. Features Section --- */
 .section-container {
-  max-width: 1200px;
+  max-width: 1500px;
   margin: 0 auto;
   padding: 100px 24px;
 }
@@ -278,6 +278,7 @@ body {
   font-weight: 800;
   margin-bottom: 24px;
   color: white;
+  text-align: center;
 }
 
 .section-desc {
