@@ -10,7 +10,7 @@ export default function Header() {
         <div className="header-container">
           <Link to="/" className="header-logo">
             <MessageCircle className="header-logo-icon" size={32} />
-            <span>MultiChat</span>
+            <span>OminiChat</span>
           </Link>
 
           <nav className="header-nav">

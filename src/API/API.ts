@@ -91,7 +91,7 @@ export class Api {
         if (errorStatus === 401) {
           // window.location.href = "/login";
         }
-        const errorMessage = errorData.errors[0]?.errorMessage || "Đã xảy ra lỗi";
+        const errorMessage = errorData?.errors[0]?.errorMessage || "Đã xảy ra lỗi";
         toast.error(errorMessage);
       }
     );

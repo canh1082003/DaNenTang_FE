@@ -93,7 +93,9 @@ export default function Dashboard() {
             </a>
           </div>
           <div className="conversations-list">
-            {recentConversations?.map((reccent: any) => {
+            {recentConversations
+             ?.filter((item: any) => item.type === "group")
+            .map((reccent: any) => {
               const lastMsg =
                 reccent.lastMessage?.content || "Chưa có tin nhắn";
               const platform = getPlatformFromName(reccent.name!);
