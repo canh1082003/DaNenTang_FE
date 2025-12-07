@@ -1,4 +1,4 @@
-import "./serverOverload.css";
+import "./ServerOverload.css";
 
 export default function ServerOverload() {
   return (

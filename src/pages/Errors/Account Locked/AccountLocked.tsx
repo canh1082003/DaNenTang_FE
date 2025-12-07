@@ -1,4 +1,4 @@
-import "./accountLocked.css";
+import "./AccountLocked.css";
 
 export default function AccountLocked() {
   return (
