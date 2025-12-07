@@ -1,4 +1,4 @@
-import "./tooManyRequests.css";
+import "./TooManyRequests.css";
 
 export default function TooManyRequests() {
   return (
