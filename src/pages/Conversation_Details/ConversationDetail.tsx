@@ -27,7 +27,7 @@ import { useUserStatusEvents } from "../../hooks/Chat/useUserStatusEvents";
 import { useSocketMessages } from "../../hooks/Chat/useSocketMessages";
 import { useSendMessage } from "../../hooks/Chat/useSendMessage";
 import { SectionKey } from "./type";
-import { getSocket } from "../../Utils/socket";
+import socket from "../../Utils/socket";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import api from "../../API/API";
@@ -56,7 +56,7 @@ export default function ConversationDetail({
   const [showSidebar, setShowSidebar] = useState(false);
 
 
-const socket = getSocket();
+// const socket = getSocket();
   const [expandedSections, setExpandedSections] = useState<
     Record<SectionKey, boolean>
   >({

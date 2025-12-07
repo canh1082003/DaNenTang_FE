@@ -5,7 +5,9 @@ import "../Chatbox/Chatbox.css";
 import { Conversation } from "./type";
 import { ALL_CONVERSATIONS } from "../../hooks/auth/chat/constants";
 import api from "../../API/API";
-import { getSocket } from "../../Utils/socket";
+// import { getSocket } from "../../Utils/socket";
+import socket from "../../Utils/socket";
+
 import { timeAgo } from "../../Utils/formatDate";
 import ConversationDetail from "../Conversation_Details/ConversationDetail";
 import { useNavigate } from "react-router-dom";
@@ -39,7 +41,7 @@ export default function ChatBox() {
   };
   const [chatType, setChatType] = useState<"customer" | "staff">("customer");
   const [now, setNow] = useState(Date.now());
-  const socket = getSocket();
+  // const socket = getSocket();
   useEffect(() => {
     const i = setInterval(() => setNow(Date.now()), 30000);
     return () => clearInterval(i);

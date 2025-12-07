@@ -62,12 +62,12 @@ export const useSendMessage = (token: string | null) => {
   const { conversationId } = useParams<{ conversationId: string }>();
 
   const sendMessage = async (
-    payload: { content?: string; type?: string } | FormData
+    payload: {content?: string; type?: string } | FormData
   ) => {
     try {
       let res;
       if (payload instanceof FormData) {
-        res = await api.post(`${SEND_MESSAGE}`, payload, {
+        res = await api.post(`${SEND_MESSAGE}/${conversationId}`, payload, {
           headers: {
             Authorization: `Bearer ${token}`,
             "Content-Type": "multipart/form-data",
@@ -75,9 +75,8 @@ export const useSendMessage = (token: string | null) => {
         });
       } else {
         res = await api.post(
-          `${SEND_MESSAGE}`,
+          `${SEND_MESSAGE}/${conversationId}`,
           {
-            conversationId,
             content: payload.content || "",
             type: payload.type || "text",
           },

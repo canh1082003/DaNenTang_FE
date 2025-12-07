@@ -1,5 +1,7 @@
 import { useEffect } from "react";
-import { getSocket } from "../../Utils/socket";
+// import { getSocket } from "../../Utils/socket";
+import socket from "../../Utils/socket";
+
 import { Message } from "../../pages/Chatbox/type";
 
 export const useSocketMessages = (
@@ -11,7 +13,7 @@ export const useSocketMessages = (
   setLastReadAt: React.Dispatch<React.SetStateAction<string | undefined>>
 ) => {
   useEffect(() => {
-    const socket= getSocket();
+    // const socket= getSocket();
     const handleNewMessage = (message: Message) => {
       if (message.conversation === conversationId) {
         const shouldStick = isNearBottom();

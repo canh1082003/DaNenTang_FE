@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
-import { getSocket } from "../../Utils/socket";
+// import { getSocket } from "../../Utils/socket";
+import socket from "../../Utils/socket";
 import api from "../../API/API";
 import { GET_USER, WEBRTC } from "./constants";
 import { getToken } from "../../Utils/getToken";
@@ -13,7 +14,7 @@ export function useCall(myId: string) {
 
   const peerRef = useRef<RTCPeerConnection | null>(null);
   const localStreamRef = useRef<MediaStream | null>(null);
-  const socket= getSocket();
+  // const socket= getSocket();
   // ------------------ START CALL ------------------
   const startCall = async (targetId: string) => {
     setInCall(true);
