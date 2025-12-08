@@ -55,6 +55,19 @@ export default function ChatBox() {
       clearTimeout(handler);
     };
   }, [searchQuery]);
+  
+  useEffect(() => {
+  const handler = (e: any) => {
+    updateConversationPreview(e.detail);
+  };
+  window.addEventListener("newMessagePreview", handler);
+  return () => window.removeEventListener("newMessagePreview", handler);
+}, []);
+useEffect(() => {
+  conversationsAll.forEach(conv => {
+    socket.emit("joinRoom", conv._id);
+  });
+}, [conversationsAll]);
   const currentUserId = userInfo ? JSON.parse(userInfo).id : null;
   const currentUserDepartment = userInfo
     ? (JSON.parse(userInfo).department as string | undefined) ?? null

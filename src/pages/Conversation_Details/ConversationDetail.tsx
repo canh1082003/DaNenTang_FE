@@ -50,7 +50,6 @@ export default function ConversationDetail({
   /** ---------------- STATE ---------------- */
   const [currentConversation, setCurrentConversation] =
     useState<Conversation>();
-    console.log(currentConversation?.participants)
   const [messages, setMessages] = useState<Message[]>([]);
   const [lastReadAt, setLastReadAt] = useState<string>();
   const [showSidebar, setShowSidebar] = useState(false);

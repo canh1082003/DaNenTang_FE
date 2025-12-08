@@ -1,8 +1,8 @@
 import { io, Socket } from "socket.io-client";
 import { getToken } from "./getToken";
 
-// const SOCKET_URL = "https://danentang-be.onrender.com/";
-const SOCKET_URL = "http://localhost:4000/";
+const SOCKET_URL = "https://danentang-be.onrender.com/";
+// const SOCKET_URL = "http://localhost:4000/";
 
 const token = getToken()
 
@@ -16,6 +16,7 @@ const socket: Socket = io(SOCKET_URL, {
 socket.on("connect", () => {
   const userInfo = localStorage.getItem("userInfo");
   const userId = userInfo ? JSON.parse(userInfo).id : null;
+  
   if (userId) {
     socket.emit("setup", userId);
     console.log("Setup socket cho user:", userId);
@@ -43,11 +44,19 @@ socket.on(
     );
   }
 );
+socket.on("newMessage", (msg) => {
+  window.dispatchEvent(new CustomEvent("newMessage", { detail: msg }));
+});
+
+socket.on("newMessagePreview", (msg) => {
+  window.dispatchEvent(new CustomEvent("newMessagePreview", { detail: msg }));
+});
+
 socket.on("platform-status", (data) => {
   console.log("📡 Received platform update:", data);
 });
-// socket.onAny((event, data) => {
-//   console.log("🛰️ [SOCKET ANY EVENT]", event, data);
-// });
+socket.onAny((event, data) => {
+  console.log("🛰️ [SOCKET ANY EVENT]", event, data);
+});
 
 export default socket;
