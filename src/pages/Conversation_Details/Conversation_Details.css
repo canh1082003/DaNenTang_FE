@@ -817,7 +817,7 @@
 }
 
 
-.call-screen {
+/* .call-screen {
   position: fixed;
   inset: 0;
   background: #000;
@@ -849,7 +849,7 @@
   color: white;
   padding: 10px 20px;
   border-radius: 50px;
-}
+} */
 .search-results {
   background: #fff;
   border-radius: 8px;
@@ -896,4 +896,98 @@
   padding: 6px 10px;
   color: white;
   border-radius: 4px;
+}
+/* ====== CALL SCREEN ====== */
+.call-screen {
+  position: fixed;
+  inset: 0;
+  background: #000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  z-index: 9999;
+}
+
+/* Remote video — full center */
+.remote-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Local video — góc phải dưới */
+.local-video {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  width: 180px;
+  height: 120px;
+  border-radius: 10px;
+  border: 2px solid #fff;
+  object-fit: cover;
+  background: #222;
+  z-index: 20;
+}
+
+/* ====== CALL CONTROL PANEL ====== */
+.call-controls {
+  position: absolute;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  
+  display: flex;
+  gap: 18px;
+  justify-content: center;
+  align-items: center;
+
+  z-index: 30;
+}
+
+/* ====== BUTTON STYLE ====== */
+.call-btn {
+  padding: 12px 22px;
+  border-radius: 28px;
+  font-size: 15px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+/* Mic / Video default */
+.call-btn.toggle {
+  background: #e5e5e5;
+  color: #333;
+}
+
+/* Mic/Video OFF */
+.call-btn.toggle.off {
+  background: #ff4f4f;
+  color: white;
+}
+
+/* End Call */
+.call-btn.end {
+  background: red;
+  color: #fff;
+}
+
+.call-btn:hover {
+  opacity: 0.85;
+}
+.call-timer {
+  position: absolute;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+
+  padding: 6px 14px;
+  background: rgba(0,0,0,0.6);
+  color: white;
+  border-radius: 20px;
+  font-size: 16px;
+  font-weight: 600;
+  z-index: 50;
 }

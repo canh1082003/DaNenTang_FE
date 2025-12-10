@@ -6,7 +6,7 @@ export default function PlatformsPage() {
     <main className="page-container">
       <h1 className="page-title">Nền tảng hỗ trợ</h1>
       <p className="page-desc">
-        MultiChat hoạt động mạnh mẽ trên mọi thiết bị và công nghệ.
+        OminiChat hoạt động mạnh mẽ trên mọi thiết bị và công nghệ.
       </p>
 
       <div className="page-grid">

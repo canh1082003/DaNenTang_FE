@@ -12,6 +12,10 @@ import {
   ChevronUp,
   ImageIcon,
   FileText,
+  VideoOff,
+  Mic,
+  MicOff,
+  PhoneOff,
 } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
 import EmojiPicker from "emoji-picker-react";
@@ -103,10 +107,15 @@ export default function ConversationDetail({
   const {
     incomingCall,
     inCall,
+     isMicOff,
+    isVideoOff,
     startCall,
     acceptCall,
     declineCall,
     endCall,
+    toggleMic,
+    toggleVideo,
+    callTime,
     localVideoRef,
     remoteVideoRef,
   } = useCall(myId);
@@ -750,7 +759,7 @@ export default function ConversationDetail({
             </div>
           )}
 
-          {inCall && (
+          {/* {inCall && (
             <div className="call-screen">
               <video
                 ref={localVideoRef}
@@ -764,7 +773,48 @@ export default function ConversationDetail({
                 Kết thúc
               </button>
             </div>
-          )}
+          )} */}
+{inCall && (
+  <div className="call-screen">
+    
+    <video ref={remoteVideoRef} autoPlay className="remote-video" />
+    <div className="call-timer">
+  {Math.floor(callTime / 60)
+    .toString()
+    .padStart(2, "0")}
+  :
+  {(callTime % 60).toString().padStart(2, "0")}
+</div>
+
+    <video ref={localVideoRef} autoPlay muted className="local-video" />
+
+    <div className="call-controls">
+
+      <button 
+        className={`call-btn toggle ${isMicOff ? "off" : ""}`}
+        onClick={toggleMic}
+      >
+        {isMicOff ? <MicOff/> : <Mic/> }
+      </button>
+
+      <button 
+        className={`call-btn toggle ${isVideoOff ? "off" : ""}`}
+        onClick={toggleVideo}
+      >
+        {isVideoOff ? <VideoOff/> : <Video />}
+      </button>
+
+      <button 
+        className="call-btn end"
+        onClick={endCall}
+      >
+        <PhoneOff /> 
+      </button>
+
+    </div>
+  </div>
+)}
+
 
           <button
             className="action-button"

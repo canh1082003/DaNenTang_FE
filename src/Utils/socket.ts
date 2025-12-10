@@ -1,8 +1,8 @@
 import { io, Socket } from "socket.io-client";
 import { getToken } from "./getToken";
+import { SOCKET_URL } from "./type";
 
-const SOCKET_URL = "https://danentang-be.onrender.com/";
-// const SOCKET_URL = "http://localhost:4000/";
+
 
 const token = getToken()
 
